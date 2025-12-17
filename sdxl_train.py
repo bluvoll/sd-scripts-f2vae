@@ -30,6 +30,7 @@ logger = logging.getLogger(__name__)
 
 import library.config_util as config_util
 import library.sdxl_train_util as sdxl_train_util
+import library.custom_sdxl_utils as custom_sdxl_utils
 from library.config_util import (
     ConfigSanitizer,
     BlueprintGenerator,
@@ -198,14 +199,21 @@ def train(args):
                 raise ValueError(f"--freeze_unet_blocks indices must be in [0, {UNET_NUM_BLOCKS_FOR_BLOCK_LR - 1}]")
             frozen_unet_blocks.add(idx)
 
-    vae_scale_factor = sdxl_model_util.VAE_SCALE_FACTOR
-    vae_shift_factor = 0.0
+    vae_scale_factor, vae_shift_factor = custom_sdxl_utils.get_vae_scale_and_shift(args.vae_type)
+
     if args.vae_custom_scale is not None:
         vae_scale_factor = float(args.vae_custom_scale)
         logger.info(f"Using custom VAE scale factor: {vae_scale_factor}")
+    else:
+        logger.info(f"Using auto-detected VAE scale factor: {vae_scale_factor} (based on vae_type: {args.vae_type})")
+        
     if args.vae_custom_shift is not None:
         vae_shift_factor = float(args.vae_custom_shift)
         logger.info(f"Using custom VAE shift factor: {vae_shift_factor}")
+    else:
+         if vae_shift_factor != 0:
+            logger.info(f"Using auto-detected VAE shift factor: {vae_shift_factor} (based on vae_type: {args.vae_type})")
+
     args.vae_scale_factor = vae_scale_factor
     args.vae_shift_factor = vae_shift_factor
 
@@ -354,19 +362,45 @@ def train(args):
     weight_dtype, save_dtype = train_util.prepare_dtype(args)
     vae_dtype = torch.float32 if args.no_half_vae else weight_dtype
 
-    # モデルを読み込む
+    # Mixed Precision Handling
+    
+    # Custom Loader for Robust Resume Support
+    logger.info("loading model for custom VAE/full finetuning with potential channel overrides")
     (
-        load_stable_diffusion_format,
         text_encoder1,
         text_encoder2,
         vae,
         unet,
         logit_scale,
         ckpt_info,
-    ) = sdxl_train_util.load_target_model(args, accelerator, "sdxl", weight_dtype)
+    ) = custom_sdxl_utils.load_custom_sdxl_checkpoint(
+        args.pretrained_model_name_or_path,
+        accelerator.device,
+        weight_dtype,
+        custom_vae_type=getattr(args, "vae_type", None),
+        latent_channels_override=getattr(args, "latent_channels", None)
+    )
+    load_stable_diffusion_format = os.path.isfile(args.pretrained_model_name_or_path)
+
+    # Standard model utils might be skipped, but we need to ensure post-load logic (reflection padding, etc.) works
     if args.vae_reflection_padding:
         vae = model_util.use_reflection_padding(vae)
-    # logit_scale = logit_scale.to(accelerator.device, dtype=weight_dtype)
+        
+    # Custom VAE Swap if needed (already handled generic type in loader? No, loader handles detecting UNet channels. VAE loading is still done).
+    # If args.vae_type is set, we might need to load that specific VAE if it wasn't in checkpoint.
+    # The custom loader loads VAE from checkpoint.
+    
+    vae_type = getattr(args, "vae_type", None)
+    if vae_type:
+        new_vae = custom_sdxl_utils.load_custom_vae(
+            getattr(args, "vae", None), vae_type, weight_dtype, accelerator.device
+        )
+        if new_vae:
+            vae = new_vae
+            
+    # Check latent channels patch (Loader handles self-patching if detected in checkpoint OR override specified. 
+    # But if override specified, loader patches it. If detected, loader builds it correctly. 
+    # So we don't need double patching here unless something failed.)
 
     if args.list_unet_blocks:
         block_info = describe_unet_blocks(unet)
@@ -420,15 +454,28 @@ def train(args):
 
     # 学習を準備する
     if cache_latents:
-        vae.to(accelerator.device, dtype=vae_dtype)
-        vae.requires_grad_(False)
-        vae.eval()
-        with torch.no_grad():
-            train_dataset_group.cache_latents(vae, args.vae_batch_size, args.cache_latents_to_disk, accelerator.is_main_process)
-        vae.to("cpu")
-        clean_memory_on_device(accelerator.device)
+        if getattr(args, "vae_type", None) or getattr(args, "latent_channels", None):
+             logger.info("Using custom latent caching for custom VAE.")
+             custom_sdxl_utils.cache_latents_custom(
+                 vae,
+                 train_dataset_group,
+                 args,
+                 accelerator,
+                 vae_type=getattr(args, "vae_type", "sdxl"),
+                 latent_channels=getattr(args, "latent_channels", None)
+             )
+             # Wait for everyone not strictly needed inside utility if done there, but good to ensure sync
+             accelerator.wait_for_everyone()
+        else:
+            vae.to(accelerator.device, dtype=vae_dtype)
+            vae.requires_grad_(False)
+            vae.eval()
+            with torch.no_grad():
+                train_dataset_group.cache_latents(vae, args.vae_batch_size, args.cache_latents_to_disk, accelerator.is_main_process)
+            vae.to("cpu")
+            clean_memory_on_device(accelerator.device)
 
-        accelerator.wait_for_everyone()
+            accelerator.wait_for_everyone()
 
     # 学習を準備する：モデルを適切な状態にする
     if args.gradient_checkpointing:
@@ -781,7 +828,7 @@ def train(args):
 
             with accelerator.accumulate(*training_models):
                 if "latents" in batch and batch["latents"] is not None:
-                    latents = batch["latents"].to(accelerator.device).to(dtype=weight_dtype)
+                    latents = batch["latents"].to(accelerator.device, dtype=weight_dtype)
                 else:
                     with torch.no_grad():
                         # latentに変換
@@ -1243,6 +1290,13 @@ def setup_parser() -> argparse.ArgumentParser:
         default=False,
         help="For full caption dropout, use zero conditioning instead of empty caption"
     )
+    
+    # Custom VAE arguments
+    parser.add_argument("--skip_existing", action="store_true", help="Skip latent caching if npz file already exists")
+    parser.add_argument("--vae_type", type=str, default=None, help="Specify VAE type: sdxl, flux, sana, etc.")
+    parser.add_argument("--latent_channels", type=int, default=None, help="Override latent channels (e.g. 16 for Flux, 32 for Sana)")
+
+
     return parser
 
 

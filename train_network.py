@@ -156,6 +156,17 @@ class NetworkTrainer:
     def sample_images(self, accelerator, args, epoch, global_step, device, vae, tokenizer, text_encoder, unet):
         train_util.sample_images(accelerator, args, epoch, global_step, device, vae, tokenizer, text_encoder, unet)
 
+    def cache_latents(self, args, accelerator, vae, unet, train_dataset_group, vae_dtype):
+        vae.to(accelerator.device, dtype=vae_dtype)
+        vae.requires_grad_(False)
+        vae.eval()
+        with torch.no_grad():
+            train_dataset_group.cache_latents(
+                vae, args.vae_batch_size, args.cache_latents_to_disk, accelerator.is_main_process
+            )
+        vae.to("cpu")
+        clean_memory_on_device(accelerator.device)
+
     def train(self, args):
         session_id = random.randint(0, 2**32)
         training_started_at = time.time()
@@ -367,14 +378,11 @@ class NetworkTrainer:
             accelerator.print(f"all weights merged: {', '.join(args.base_weights)}")
 
         # 学習を準備する
+        # 学習を準備する
         if cache_latents:
-            vae.to(accelerator.device, dtype=vae_dtype)
-            vae.requires_grad_(False)
-            vae.eval()
-            with torch.no_grad():
-                train_dataset_group.cache_latents(vae, args.vae_batch_size, args.cache_latents_to_disk, accelerator.is_main_process)
-            vae.to("cpu")
-            clean_memory_on_device(accelerator.device)
+            self.cache_latents(
+                args, accelerator, vae, unet, train_dataset_group, vae_dtype
+            )
 
             accelerator.wait_for_everyone()
 

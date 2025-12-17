@@ -22,3 +22,5 @@ ChenkinNoob-XL-V0.1.safetensors
 attn.patch
 annealing.toml
 caching.toml
+tools/black-forest-labs/FLUX.2-dev/vae/diffusion_pytorch_model.safetensors
+tools/black-forest-labs/FLUX.2-dev/vae/config.json

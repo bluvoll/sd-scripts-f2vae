@@ -22,7 +22,7 @@ from torch.utils.data import DataLoader, Sampler
 from tqdm import tqdm
 import hashlib
 
-from library import config_util, model_util, sdxl_train_util, train_util
+from library import config_util, model_util, sdxl_train_util, train_util, custom_sdxl_utils, sdxl_model_util
 from library.config_util import BlueprintGenerator, ConfigSanitizer
 from copy import deepcopy
 
@@ -116,6 +116,8 @@ def cache_batch_latents_fast(
     device: torch.device,
     non_blocking: bool = True,
     autocast_dtype=None,
+    scale_factor=None,
+    shift_factor=None,
 ):
     processed_images, original_sizes, crop_ltrbs, alpha_masks = [], [], [], []
 
@@ -147,19 +149,45 @@ def cache_batch_latents_fast(
     )
 
     with torch.inference_mode(), autocast_ctx:
-        latents = vae.encode(img_tensors).latent_dist.sample()
+        # Custom VAE encoding retrieval (some VAEs return .latent, others .latent_dist)
+        encoded = vae.encode(img_tensors)
+        if hasattr(encoded, "latent_dist"):
+            latents = encoded.latent_dist.sample()
+        else:
+            latents = encoded.latent
 
         if flip_aug:
             flipped_tensors = torch.flip(img_tensors, dims=[3])
-            flipped_latents = vae.encode(flipped_tensors).latent_dist.sample()
+            encoded_flipped = vae.encode(flipped_tensors)
+            if hasattr(encoded_flipped, "latent_dist"):
+                flipped_latents = encoded_flipped.latent_dist.sample()
+            else:
+                flipped_latents = encoded_flipped.latent
         else:
             flipped_latents = None
+            
+        # Apply scaling and shifting
+        # We need to access args somehow or pass these values in. 
+        # Modifying signature to accept scale_factor and latent_shift
+        # NOTE: cache_batch_latents_fast signature must be updated in caller too.
+        
+    # Apply Scaling/Shifting (Shift THEN Scale)
+    if shift_factor is not None:
+        latents = latents - shift_factor
+        if flipped_latents is not None:
+             flipped_latents = flipped_latents - shift_factor
+
+    if scale_factor is not None:
+        latents = latents * scale_factor
+        if flipped_latents is not None:
+            flipped_latents = flipped_latents * scale_factor
 
     # sync copy back to CPU to avoid partially-copied buffers being saved
     latents_cpu = latents.to("cpu").contiguous()
     flipped_latents_cpu = flipped_latents.to("cpu").contiguous() if flipped_latents is not None else None
 
     return latents_cpu, flipped_latents_cpu, original_sizes, crop_ltrbs, alpha_masks
+
 
 
 def cache_latents_fast(dataset, vae, accelerator, args):
@@ -257,6 +285,8 @@ def cache_latents_fast(dataset, vae, accelerator, args):
             device=device,
             non_blocking=True,
             autocast_dtype=args.fast_autocast_dtype,
+            scale_factor=args.vae_scale_factor,
+            shift_factor=args.vae_shift_factor,
         )
 
         for i, (info, original_size, crop_ltrb, alpha_mask) in enumerate(
@@ -362,6 +392,8 @@ def cache_latents_for_dataset(dataset, vae, accelerator, args):
             random_crop=condition.random_crop,
             device=device,
             non_blocking=True,
+            scale_factor=args.vae_scale_factor,
+            shift_factor=args.vae_shift_factor,
         )
 
         for i, (info, original_size, crop_ltrb, alpha_mask) in enumerate(
@@ -409,7 +441,31 @@ def cache_latents(args: argparse.Namespace) -> None:
 
     logger.info("load model")
     setattr(args, "disable_mmap_load_safetensors", False)
+    
+    # Use standard loader for base
+    # Temporarily hide custom VAE path from standard loader to prevent "missing keys" crash (it expects SDXL VAE keys)
+    original_vae_path = getattr(args, "vae", None)
+    vae_type = getattr(args, "vae_type", None)
+    
+    if vae_type and original_vae_path:
+        logger.info(f"Custom VAE type '{vae_type}' detected. preventing standard loader from loading VAE: {original_vae_path}")
+        args.vae = None
+
     _, _, _, vae, _, _, _ = sdxl_train_util.load_target_model(args, accelerator, "sdxl", weight_dtype)
+    
+    # Restore args.vae
+    if original_vae_path:
+        args.vae = original_vae_path
+    
+    # Swap VAE if custom type specified
+    if vae_type:
+        logger.info(f"Replacing VAE with custom VAE type: {vae_type}, path: {original_vae_path}")
+        new_vae = custom_sdxl_utils.load_custom_vae(
+            original_vae_path, vae_type, weight_dtype, accelerator.device
+        )
+        if new_vae:
+            vae = new_vae
+
     if getattr(args, "vae_reflection_padding", False):
         vae = model_util.use_reflection_padding(vae)
 
@@ -428,6 +484,22 @@ def cache_latents(args: argparse.Namespace) -> None:
     vae.to(accelerator.device, dtype=vae_dtype)
     vae.requires_grad_(False)
     vae.eval()
+    
+    # Determine Scale and Shift Factors
+    # Default behavior: NO SCALING (Raw Latents).
+    # Only apply if user explicitly provides custom values.
+    
+    scale_factor = args.vae_custom_scale
+    shift_factor = args.vae_custom_shift
+    
+    if scale_factor is None and shift_factor is None:
+        logger.info("No custom scale/shift provided. Caching RAW latents (scale=1.0, shift=0.0).")
+    else:
+        logger.info(f"Using Custom VAE Scale Factor: {scale_factor}, Shift Factor: {shift_factor}")
+    
+    # Attach to args so inner functions can use them easily
+    args.vae_scale_factor = scale_factor
+    args.vae_shift_factor = shift_factor
 
     def handle_interrupt(signum, frame):
         logger.warning(f"Received signal {signum}; will stop after the current batch.")
@@ -503,6 +575,12 @@ def setup_parser() -> argparse.ArgumentParser:
         choices=["fp16", "bf16"],
         help="optional autocast dtype for fast caching (can speed up when --no_half_vae is used)",
     )
+    # Custom VAE arguments
+    parser.add_argument("--vae_type", type=str, default=None, help="Specify VAE type: sdxl, flux, sana, etc.")
+    parser.add_argument("--latent_channels", type=int, default=None, help="Override latent channels (e.g. 16 for Flux, 32 for Sana)")
+    parser.add_argument("--vae_custom_scale", type=float, default=None, help="Custom VAE scale factor")
+    parser.add_argument("--vae_custom_shift", type=float, default=None, help="Custom VAE shift factor")
+
     return parser
 
 
