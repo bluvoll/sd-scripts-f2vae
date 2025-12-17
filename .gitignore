@@ -13,3 +13,12 @@ GEMINI.md
 MagicMock
 RamTorch/
 lycoris-ramtorch
+tools/plot_flow_timestep_distribution.py
+tools/time_step_distribution-logit.py
+velvet-EQ.toml
+flow_logit_normal_shift.png
+convert-to-rf.toml
+ChenkinNoob-XL-V0.1.safetensors
+attn.patch
+annealing.toml
+caching.toml

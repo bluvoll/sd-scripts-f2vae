@@ -9,8 +9,6 @@ import json
 import logging
 import pathlib
 import re
-import threading
-import queue
 import shutil
 import time
 from typing import (
@@ -79,6 +77,7 @@ import library.huggingface_util as huggingface_util
 import library.sai_model_spec as sai_model_spec
 import library.deepspeed_utils as deepspeed_utils
 from library.utils import setup_logging, pil_resize
+from library.sdxl_train_util import get_size_embeddings
 
 setup_logging()
 import logging
@@ -2519,6 +2518,88 @@ class MinimalDataset(BaseDataset):
         raise NotImplementedError
 
 
+
+class OnlineTEDatasetWrapper(torch.utils.data.Dataset):
+    def __init__(self, dataset, text_encoder1, text_encoder2, tokenizer1, tokenizer2, args, weight_dtype):
+        super().__init__()
+
+        self._dataset = dataset
+        self._text_encoder1 = torch.compile(text_encoder1)
+        self._text_encoder2 = torch.compile(text_encoder2)
+        self._tokenizer1 = tokenizer1
+        self._tokenizer2 = tokenizer2
+
+        self._args = args
+        self._weight_dtype = weight_dtype
+
+    @staticmethod
+    def worker_init_fn(worker_id):
+        # pytorch sets number of threads to 1 by default for dataloader processes
+        num_workers = torch.utils.data.get_worker_info().num_workers
+        torch.set_num_threads(max(os.cpu_count() // (num_workers) - 2, 1))
+        
+    def __len__(self):
+        return len(self._dataset)
+
+    def __getitem__(self, index):
+        batch = self._dataset[index]
+        batch = self.update_batch(batch)
+        return batch
+
+    def update_batch(self, batch):
+        if "text_encoder_outputs1_list" not in batch or batch["text_encoder_outputs1_list"] is None:
+            input_ids1 = batch["input_ids"]
+            input_ids2 = batch["input_ids2"]
+            with torch.inference_mode():
+                input_ids1 = input_ids1.to(self._text_encoder1.device)
+                input_ids2 = input_ids2.to(self._text_encoder2.device)
+                # unwrap_model is fine for models not wrapped by accelerator
+                encoder_hidden_states1, encoder_hidden_states2, pool2 = [t.to(self._weight_dtype) for t in get_hidden_states_sdxl(
+                    self._args.max_token_length,
+                    self._args.use_zero_cond_dropout,
+                    input_ids1,
+                    input_ids2,
+                    self._tokenizer1,
+                    self._tokenizer2,
+                    self._text_encoder1,
+                    self._text_encoder2,
+                    None if not self._args.full_fp16 else self._weight_dtype,
+                    accelerator=None,
+                )]
+        
+            # get size embeddings
+            orig_size = batch["original_sizes_hw"]
+            crop_size = batch["crop_top_lefts"]
+            target_size = batch["target_sizes_hw"]
+            embs = get_size_embeddings(orig_size, crop_size, target_size, self._text_encoder1.device).to(self._weight_dtype)
+
+            # concat embeddings
+            vector_embedding = torch.cat([pool2, embs], dim=1).to(self._weight_dtype)
+            text_embedding = torch.cat([encoder_hidden_states1, encoder_hidden_states2], dim=2).to(self._weight_dtype)
+
+            batch["cached_vector_embedding"] = vector_embedding.cpu()
+            batch["cached_text_embedding"] = text_embedding.cpu()
+
+        return batch
+    
+    def set_max_train_steps(self, *args):
+        return self._dataset.set_max_train_steps(*args)
+
+    def set_current_epoch(self, *args):
+        return self._dataset.set_current_epoch(*args)
+
+    def set_current_step(self, *args):
+        return self._dataset.set_current_step(*args)
+
+    @property
+    def num_train_images(self):
+        return self._dataset.num_train_images
+
+    @property
+    def datasets(self):
+        return self._dataset.datasets
+
+
 def load_arbitrary_dataset(args, tokenizer) -> MinimalDataset:
     module = ".".join(args.dataset_class.split(".")[:-1])
     dataset_class = args.dataset_class.split(".")[-1]
@@ -2578,49 +2659,6 @@ def trim_and_resize_if_required(
 
     assert image.shape[0] == reso[1] and image.shape[1] == reso[0], f"internal error, illegal trimmed size: {image.shape}, {reso}"
     return image, original_size, crop_ltrb
-
-
-class ThreadedPrefetcher:
-    def __init__(self):
-        self._in_queue = queue.Queue(1)
-        self._out_queue = queue.Queue(1)
-        self._worker = threading.Thread(target=self._worker_fun, args=(self._in_queue, self._out_queue), daemon=True)
-        self._worker.start()
-
-    def _worker_fun(self, _in_queue, _out_queue):
-        while True:
-            fn, args, kwargs = self._in_queue.get()
-            self._out_queue.put(fn(*args, **kwargs))
-
-    def next_batch(self, fn, args=(), kwargs=None):
-        if kwargs is None:
-            kwargs = {}
-
-        self._in_queue.put((fn, args, kwargs))
-
-    def current_batch(self):
-        return self._out_queue.get()
-
-    def __del__(self):
-        if self._worker.is_alive():
-            self._worker.join(1.0)
-
-
-class CUDAStreamPrefetcher:
-    def __init__(self, *args, **kwargs):
-        self.stream = torch.cuda.Stream(*args, **kwargs)
-        self.current_result = None
-        
-    def next_batch(self, fn, args=(), kwargs=None):
-        if kwargs is None:
-            kwargs = {}
-        
-        with torch.cuda.stream(self.stream):
-            self.current_result = fn(*args, **kwargs)
-    
-    def current_batch(self):
-        torch.cuda.current_stream().wait_stream(self.stream)
-        return self.current_result
 
 
 def cache_batch_latents(
@@ -5475,34 +5513,6 @@ def _scipy_assignment(cost: torch.Tensor):
     col = torch.from_numpy(col_ind).to(cost.device, torch.long)
     return cost, (row, col)
 
-def gaussian_to_brown(white, exp=1.0):
-    dtype = white.dtype
-    device = white.device
-    b, c, h, w = white.shape
-
-    white = white.float()
-
-    # image to fft
-    white_ft = torch.fft.fftshift(torch.fft.fftn(white, dim=(2, 3)), dim=(2, 3))
-    fy = torch.fft.fftshift(torch.fft.fftfreq(h, device=device))
-    fx = torch.fft.fftshift(torch.fft.fftfreq(w, device=device))
-    fy, fx = torch.meshgrid(fy, fx, indexing='ij')
-    freq = torch.hypot(fx, fy)
-
-    # filter gaussian in fft space, avoiding division by zero
-    filter_ = torch.zeros_like(freq)
-    mask = freq > 0
-    filter_[mask] = 1.0 / freq[mask] ** exp  # PSD is filter_**2
-    brown_ft = white_ft * filter_
-
-    # fft to image
-    brown = torch.fft.ifftn(torch.fft.ifftshift(brown_ft, dim=(2, 3)), dim=(2, 3)).real
-
-    # bring mean and std to (0, 1) per channel per batch item to match randn distribution
-    std, mean = torch.std_mean(brown, dim=(2, 3), keepdim=True)
-    brown = (brown - mean) / std.clamp(min=1e-8)  # avoid div-by-zero, though unlikely
-
-    return brown.to(dtype=dtype)
 
 def get_noise_noisy_latents_and_timesteps(
     args,
@@ -5512,10 +5522,6 @@ def get_noise_noisy_latents_and_timesteps(
     pixel_counts=None,
 ):
     noise = torch.randn_like(latents, device=latents.device)
-
-    if args.use_brown_noise:
-        noise = gaussian_to_brown(noise)
-        
     if args.noise_offset:
         if args.noise_offset_random_strength:
             noise_offset = torch.rand(1, device=latents.device) * args.noise_offset

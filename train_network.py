@@ -1280,6 +1280,11 @@ def setup_parser() -> argparse.ArgumentParser:
         choices=[None, "ckpt", "pt", "safetensors"],
         help="format to save the model (default is .safetensors) / モデル保存時の形式（デフォルトはsafetensors）",
     )
+    parser.add_argument(
+        "--disable_cross_attn_mask",
+        action="store_true",
+        help="Disable SDXL cross-attention masking so padded tokens participate normally / SDXLのcross-attentionマスク機能を無効化する",
+    )
 
     parser.add_argument("--unet_lr", type=float, default=None, help="learning rate for U-Net / U-Netの学習率")
     parser.add_argument("--text_encoder_lr", type=float, default=None, help="learning rate for Text Encoder / Text Encoderの学習率")

@@ -158,6 +158,12 @@ def copy_stochastic(
             target.copy_(source)
             return
 
+        # Ensure the source tensor is in a consistent format for bitwise ops
+        if source.dtype != torch.float32:
+            source = source.to(torch.float32)
+        if not source.is_contiguous():
+            source = source.contiguous()
+
         # Special handling for int8
         if target.dtype == torch.int8:
             # Scale the source values to utilize the full int8 range

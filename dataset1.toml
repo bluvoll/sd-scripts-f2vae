@@ -7,8 +7,8 @@ bucket_reso_steps = 64
 
 [[datasets]]
     [[datasets.subsets]]
-    caption_dropout_rate      = 0.01
-    caption_tag_dropout_rate  = 0.0
+    caption_dropout_rate      = 0.1
+    caption_tag_dropout_rate  = 0.1
     caption_extension         = ".txt"
     image_dir                 = "/home/bluvoll/Escritorio/anime/rebis/"
     num_repeats               = 1

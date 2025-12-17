@@ -1,42 +1,48 @@
 [additional_network_arguments]
-learning_rate      = 2e-5
-train_text_encoder = false
-text_encoder_lr    = 5e-5
-
+unet_lr            = 5e-4
+text_encoder_lr    = 2e-5
+network_dim        = 32
+network_alpha      = 64
+network_module     = "lycoris.kohya"
+network_args       = ['conv_dim=24', 'conv_alpha=48.0', 'algo=locon', 'preset=full', 'train_norm=False', 'torch_compile=False', 'loraplus_lr_ratio=1.5', 'use_scalar=False']
 
 [optimizer_arguments]
-lr_scheduler       = "REX"
+lr_scheduler       = "constant_with_warmup"
 optimizer_type     = "AdamW8bit"
-optimizer_args     = ["weight_decay=0.01"]
+optimizer_args     = ["weight_decay=0.01"] #0.01 for AdamW
 min_lr             = 0
 
 [training_arguments]
 max_train_epochs    = 50
+protected_tags_file = "/home/bluvoll/Documentos/pipeline download/tags.txt"
 loss_type          = "l2"
-save_every_n_epochs = 50
+save_every_n_epochs = 1
+#save_every_n_steps = 250
 save_last_n_epochs  = 5
 train_batch_size   = 12
 max_grad_norm      = 0
 weighted_captions  = false
-seed               = 658679
+seed               = 79979654
 max_token_length   = 225
 lowram             = false
 max_data_loader_n_workers = 4
 persistent_data_loader_workers = true
 save_precision     = "bf16"
 mixed_precision    = "bf16"
-full_bf16          = true
+#full_bf16          = true
 output_dir         = "/home/bluvoll/stable-diffusion-webui-reForge/models/Lora/"
 output_name        = "rebis-test"
 
 [model_arguments]
-pretrained_model_name_or_path = "/home/bluvoll/Descargas/NoobAI-RF-v0.5-step00002100.safetensors"
+pretrained_model_name_or_path = "/home/bluvoll/ComfyUI/output/checkpoints/v-pred_RF_LOKR_00001_.safetensors"
 v2                    = false
 sdxl                  = true
 gradient_checkpointing = true
-gradient_accumulation_steps = 4 
+gradient_accumulation_steps = 24
 sdpa                  = true
-no_half_vae           = true
+#logging_dir ="logs"
+#log_with = "wandb"
+#wandb_run_name = "RF-LOKR"
 
 [saving_arguments]
 save_model_as = "safetensors"
@@ -45,4 +51,4 @@ save_model_as = "safetensors"
 [dataset_arguments]
 cache_latents              = true
 cache_latents_to_disk      = true
-lr_warmup_steps            = 30
+lr_warmup_steps            = 5
