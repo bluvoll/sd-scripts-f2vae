@@ -1,22 +1,26 @@
-learning_rate      = 3e-5
-train_text_encoder = false
+[additional_network_arguments]
+unet_lr            = 3e-4
 text_encoder_lr    = 5e-5
+network_dim        = 24
+network_alpha      = 48
+network_module     = "lycoris.kohya"
+network_args       = ['conv_dim=24', 'conv_alpha=48.0', 'algo=locon', 'preset=full', 'train_norm=False', 'torch_compile=False', 'loraplus_lr_ratio=2', 'use_scalar=False']
 
 [optimizer_arguments]
 lr_scheduler       = "REX"
-optimizer_type     = "AdamW8bit"
-optimizer_args     = ["weight_decay=0.01"]
+optimizer_type     = "AdamW8Kahan"
+min_lr             = 0
 
 [training_arguments]
-max_train_epochs    = 5
+max_train_epochs    = 400
 #protected_tags_file = "/home/bluvoll/Documentos/pipeline download/tags.txt"
 loss_type          = "l2"
 save_every_n_epochs = 1
-save_last_n_epochs  = 5
-train_batch_size   = 92
+save_last_n_epochs  = 10
+train_batch_size   = 12
 max_grad_norm      = 1
 weighted_captions  = false
-seed               = 1979645
+seed               = 845
 max_token_length   = 225
 lowram             = false
 max_data_loader_n_workers = 4
@@ -25,19 +29,19 @@ save_precision     = "bf16"
 mixed_precision    = "bf16"
 full_bf16          = true
 output_dir         = "/home/bluvoll/stable-diffusion-webui-reForge/models/Stable-diffusion/"
-output_name        = "Something-Something"
+output_name        = "100-kanojos-test"
 
 [model_arguments]
-pretrained_model_name_or_path = "/home/bluvoll/stable-diffusion-webui-reForge/models/Stable-diffusion/somebase.safetensors"
-#vae="/home/bluvoll/custom-kohya/sd-scripts/tools/black-forest-labs/FLUX.2-dev" #OwO
+pretrained_model_name_or_path = "/home/bluvoll/ComfyUI/models/checkpoints/Final-step00007800.safetensors"
+vae="/home/bluvoll/custom-kohya/sd-scripts/tools/black-forest-labs/FLUX.2-dev" #OwO
 v2                    = false
 sdxl                  = true
 gradient_checkpointing = true
-gradient_accumulation_steps = 2
+gradient_accumulation_steps = 4
 sdpa                  = true
-logging_dir ="logs"
-log_with = "wandb"
-wandb_run_name = "Final"
+#logging_dir ="logs"
+#log_with = "wandb"
+#wandb_run_name = "Final"
 
 [saving_arguments]
 save_model_as = "safetensors"

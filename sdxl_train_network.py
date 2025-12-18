@@ -267,8 +267,6 @@ def setup_parser() -> argparse.ArgumentParser:
     sdxl_train_util.add_sdxl_training_arguments(parser)
     parser.add_argument("--vae_type", type=str, default=None, help="Specify VAE type: sdxl, flux, sana, etc.")
     parser.add_argument("--latent_channels", type=int, default=None, help="Override latent channels (e.g. 16 for Flux, 32 for Sana)")
-    parser.add_argument("--vae_custom_scale", type=float, default=None, help="Custom VAE scale factor (overrides default)")
-    parser.add_argument("--vae_custom_shift", type=float, default=None, help="Custom VAE shift factor (overrides default)")
     return parser
 
 
