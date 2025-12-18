@@ -23,6 +23,11 @@ A shitty experiment of Rectified Flow for SDXL you can find it here in [Civitai]
 - --vae_custom_shift suggested for Anzhc's eq-vae put -0.4743
 - --vae_reflection_padding suggested to use with Anzhc's eq-vae, my shitty experiment wasn't trained with this.
 - --use_sga attaches Lodestone's stochastic accumulator for gradient accumulation, currently borked.
+- --vae_type flux2 Self Explanatory, can work with Flux 1 too
+- --latent_channels 32 Self Explanatory, use 16 for Flux 1 if you into that.
+- --skip_existing  Skips latents check, imagine checking ++10 Million latents when it can take a couple hours and time is money.
+- --vae_custom_scale 0.6043 Flux 2 VAE
+- --vae_custom_shift 0.0760 Flux 2 VAE
 
 You can use launch_all_train.sh to start training, or copy the command to an activated venv, works on windows or linux w/e the file itself has a working template
 
