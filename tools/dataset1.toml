@@ -1,8 +1,9 @@
 [general]
-resolution        = 1024
-enable_bucket     = true
-min_bucket_reso   = 256
-max_bucket_reso   = 4096
+resolution = 1024
+enable_bucket = true
+bucket_no_upscale = true
+min_bucket_reso = 256
+max_bucket_reso = 3072
 bucket_reso_steps = 64
 
 [[datasets]]
@@ -10,6 +11,7 @@ bucket_reso_steps = 64
     caption_dropout_rate      = 0.1
     caption_tag_dropout_rate  = 0.1
     caption_extension         = ".txt"
-    image_dir                 = "/home/bluvoll/Escritorio/anime/kanojos/"
+    image_dir                 = "/home/bluvoll/Documentos/nyalia-1.0/"
     num_repeats               = 1
+    keep_tokens               = 1
     shuffle_caption           = true
