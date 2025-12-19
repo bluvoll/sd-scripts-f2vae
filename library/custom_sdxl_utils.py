@@ -13,6 +13,13 @@ from library import model_util, sdxl_model_util, sdxl_original_unet
 from library.sdxl_model_util import _load_state_dict_on_device, convert_sdxl_text_encoder_2_checkpoint
 from accelerate import init_empty_weights
 from transformers import CLIPTextModel, CLIPTextConfig, CLIPTextModelWithProjection
+from library.train_util import (
+    IMAGE_TRANSFORMS,
+    load_image,
+    trim_and_resize_if_required,
+    save_latents_to_disk,
+    is_disk_cached_latents_is_expected,
+)
 
 def load_custom_sdxl_checkpoint(ckpt_path, map_location, dtype=None, custom_vae_type=None, latent_channels_override=None):
     """
@@ -396,197 +403,134 @@ def cache_latents_custom(
 ):
     """
     Custom latent caching loop supporting Flux/Sana/Custom VAEs.
-    Substitutes standard cache_latents.
+    Matches the standard cache format (latents + metadata) so loaders work.
     """
-    
-    # 1. Determine safe settings
-    # For now, we assume simple single-device per process or DDP where we run on local device.
-    # dataset_group has .cache_latents but we want to perform our own logic.
-    # We iterate over image_data in the dataset group's subsets.
-    
-    # Collect all image infos
-    image_infos = []
-    # dataset_group.datasets is a list of datasets (BaseDataset instances)
-    # But usually dataset_group acts as a list of datasets?
-    # Actually DatasetGroup in library/train_util.py has `image_data` aggregated? 
-    # No, cache_latents in DatasetGroup iterates over `self.image_data.values()`.
-    
-    # We need access to all images.
-    # dataset_group.image_data is a dict of key -> ImageInfo
-    
     image_infos = list(dataset_group.image_data.values())
     if not image_infos:
         print("No images to cache.")
         return
 
-    # Update latents_npz paths and filter if skipping
+    # Build a lookup from image key to subset (per-dataset)
+    image_to_subset = {}
+    if hasattr(dataset_group, "image_to_subset"):
+        image_to_subset = dataset_group.image_to_subset
+    else:
+        for ds in getattr(dataset_group, "datasets", []):
+            if hasattr(ds, "image_to_subset"):
+                image_to_subset.update(ds.image_to_subset)
+
+    # Prepare cache paths and skip already-valid entries
     images_to_process = []
     skip_existing = getattr(args, "skip_existing", False)
-    
     for info in image_infos:
-        # Standard SD-Scripts logic: npz matches image path
         info.latents_npz = os.path.splitext(info.absolute_path)[0] + ".npz"
-        
+        subset = image_to_subset.get(info.image_key)
+        if subset is None:
+            raise ValueError(f"subset not found for image key: {info.image_key}")
         if skip_existing and os.path.exists(info.latents_npz):
             continue
+        if subset and os.path.exists(info.latents_npz) and is_disk_cached_latents_is_expected(
+            info.bucket_reso, info.latents_npz, subset.flip_aug, subset.alpha_mask
+        ):
+            continue
         images_to_process.append(info)
-        
+
     if not images_to_process:
         print(f"[Custom Latents Cache] All {len(image_infos)} latents exist. Skipping encoding.")
         return
-        
-    print(f"[Custom Latents Cache] Caching latents for {len(images_to_process)} images (Skipped {len(image_infos) - len(images_to_process)}). VAE Type: {vae_type}")
-    
-    # Use only images needing processing
-    image_infos = images_to_process # Overwrite list for sorting/processing
+
+    print(
+        f"[Custom Latents Cache] Caching latents for {len(images_to_process)} images "
+        f"(Skipped {len(image_infos) - len(images_to_process)}). VAE Type: {vae_type}"
+    )
+
+    # Group by resolution/augment settings like the standard cache path
+    class Condition:
+        def __init__(self, reso, flip_aug, alpha_mask, random_crop):
+            self.reso = reso
+            self.flip_aug = flip_aug
+            self.alpha_mask = alpha_mask
+            self.random_crop = random_crop
+
+        def __eq__(self, other):
+            return (
+                self.reso == other.reso
+                and self.flip_aug == other.flip_aug
+                and self.alpha_mask == other.alpha_mask
+                and self.random_crop == other.random_crop
+            )
+
+    images_to_process.sort(key=lambda info: info.bucket_reso[0] * info.bucket_reso[1])
+    batches = []
+    batch = []
+    current_condition = None
+    batch_size = getattr(args, "vae_batch_size", 1)
+
+    for info in images_to_process:
+        subset = image_to_subset.get(info.image_key)
+        condition = Condition(info.bucket_reso, subset.flip_aug, subset.alpha_mask, subset.random_crop)
+        if len(batch) > 0 and current_condition != condition:
+            batches.append((current_condition, batch))
+            batch = []
+        batch.append(info)
+        current_condition = condition
+        if len(batch) >= batch_size:
+            batches.append((current_condition, batch))
+            batch = []
+            current_condition = None
+    if len(batch) > 0:
+        batches.append((current_condition, batch))
 
     vae.eval()
-    vae.to(accelerator.device, dtype=torch.float32) # VAE usually runs in FP32 for precision or BF16
+    vae.to(accelerator.device, dtype=torch.float32 if args.no_half_vae else vae.dtype)
 
-    # Determine scale factor and shift
-    # We NO LONGER scale here. We save RAW latents to match standard sd-scripts behavior.
-    # Scale/Shift will be applied during training.
-    
-    # We still need to know VAE type for logging
-    vae_type_key = (vae_type or "sdxl").lower()
-    
-    # Check for latent channels override
-    expected_channels = 4
-    if latent_channels:
-        expected_channels = latent_channels
-    elif hasattr(vae, "config") and hasattr(vae.config, "latent_channels"):
-        expected_channels = vae.config.latent_channels
-    
-    print(f"[Custom Latents Cache] Caching RAW latents (no scale/shift applied). Latent channels: {expected_channels}")
-
-    batch_size = args.vae_batch_size if hasattr(args, 'vae_batch_size') else 1
-    
-    print(f"[Custom Latents Cache] Configured batch size: {batch_size}")
-
-    # Create batches
-    # We need to sort/group by resolution to batch effectively
-    # Simple strategy: process one by one or simple grouping
-    # Cabal does grouping by resolution. 
-    
-    # Let's reuse dataset_group.cache_latents logic partially? 
-    # No, it's hard to hook into that. We should rewrite the loop.
-    
-    image_infos.sort(key=lambda info: info.bucket_reso)
-    
-    # Prepare batch
-    batch = []
-    
-    def process_batch(current_batch):
-        if not current_batch:
-            return
-        
-        # print(f"Processing batch of size: {len(current_batch)}") # Uncomment for verbose debug
-            
+    for condition, batch_infos in tqdm(batches, desc="Caching Custom Latents"):
         images = []
-        target_resos = []
-        
-        for info in current_batch:
-             # Load image
-            img = Image.open(info.absolute_path).convert("RGB")
-            # Resize/Crop
-            # We use info.bucket_reso
-            w, h = info.bucket_reso
-            
-            # Simple resize to bucket reso (assuming it was already bucketed correctly? 
-            # In SD-Scripts, bucket_reso is the target size)
-            # But we must ensure aspect ratio match or center crop?
-            # Existing SD-Scripts logic does extensive resizing/cropping in __getitem__.
-            # For caching, we need to replicate that.
-            # info.bucket_reso is (w, h)
-            
-            # Use cabal's logic or simplified:
-            # Cabal: center_mod8_crop(image) -> resize to target
-            
-            # SD-Scripts strategy:
-            # buckets are determined. images are NOT pre-cropped on disk usually.
-            # We must adhere to how the training will see the image.
-            # In `__getitem__`: 
-            #   crops based on `crop_ltrb` (which is calculated in BucketManager)
-            #   resizes to bucket_reso
-            
-            # If info.latents_crop_ltrb is set, use it.
-            if info.latents_crop_ltrb:
-                l, t, r, b = info.latents_crop_ltrb
-                img = img.crop((l, t, r, b))
-            
-            img = img.resize((w, h), Image.BICUBIC) # standard Resize
-            
-            tensor = transforms.ToTensor()(img) # [0,1]
-            tensor = transforms.Normalize([0.5], [0.5])(tensor)
-            
-            images.append(tensor)
-        
-        batch_tensor = torch.stack(images).to(vae.device, dtype=vae.dtype)
-        
-        with torch.no_grad():
-            # Encode
-            # Handle tiling if needed
-            if hasattr(vae, "enable_tiling") and args.vae_batch_size == 1: # Tiling often needs batch size 1 to save memory
-                 pass # vae.enable_tiling() # Assumed enabled if desired?
-            
-            if hasattr(vae, "encode"):
-                encoded = vae.encode(batch_tensor)
-                
-                if hasattr(encoded, "latent_dist"):
-                    latents = encoded.latent_dist.sample()
+        alpha_masks = []
+        for info in batch_infos:
+            subset = image_to_subset.get(info.image_key)
+            image = load_image(info.absolute_path, subset.alpha_mask)
+            image, original_size, crop_ltrb = trim_and_resize_if_required(
+                subset.random_crop, image, info.bucket_reso, info.resized_size
+            )
+
+            info.latents_original_size = original_size
+            info.latents_crop_ltrb = crop_ltrb
+
+            if subset.alpha_mask:
+                if image.shape[2] == 4:
+                    alpha_mask = image[:, :, 3].astype(np.float32) / 255.0
                 else:
-                    latents = encoded.latent
+                    alpha_mask = np.ones_like(image[:, :, 0], dtype=np.float32)
+                alpha_masks.append(torch.from_numpy(alpha_mask))
             else:
-                 # Some VAEs might behave differently
-                 latents = vae(batch_tensor)
+                alpha_masks.append(None)
 
-            # RAW latents - no scale/shift
-            
-        # Save latents
-        latents = latents.float().cpu().numpy()
-        for i, info in enumerate(current_batch):
-            # Save to disk
-            latents_path = os.path.splitext(info.absolute_path)[0] + ".npz"
-            np.savez(latents_path, latents=latents[i])
-            info.latents_npz = latents_path
-            
-            # Also update cache_info if needed?
-            # SD-scripts updates info.latents_npz
-            
-    
-    current_batch = []
-    current_reso = None
-    
-    for info in tqdm(image_infos, desc="Caching Custom Latents"):
-        if info.latents_npz is not None and os.path.exists(info.latents_npz):
-            # Check validity?
-            # For simplicity, if exists we skip unless regen required
-            # But let's verify shape matches expected channels?
-            # Cabal implementation checks shape.
-             try:
-                l = load_latents_npz_custom(info.latents_npz)
-                if l.shape[0] != expected_channels:
-                     # Mismatch, regen
-                     pass
-                else:
-                     continue
-             except:
-                pass
-        
-        if current_reso != info.bucket_reso:
-            process_batch(current_batch)
-            current_batch = []
-            current_reso = info.bucket_reso
-        
-        current_batch.append(info)
-        
-        if len(current_batch) >= batch_size:
-            process_batch(current_batch)
-            current_batch = []
-    
-    process_batch(current_batch)
+            image = image[:, :, :3]  # strip alpha for encoding
+            images.append(IMAGE_TRANSFORMS(image))
 
-    # Clean up
+        img_tensors = torch.stack(images, dim=0).to(device=vae.device, dtype=vae.dtype)
+
+        with torch.no_grad():
+            encoded = vae.encode(img_tensors)
+            latents = encoded.latent_dist.sample().to("cpu")
+
+            if condition.flip_aug:
+                flipped_imgs = torch.flip(img_tensors, dims=[3])
+                flipped_latents = vae.encode(flipped_imgs).latent_dist.sample().to("cpu")
+            else:
+                flipped_latents = [None] * len(latents)
+
+        for info, latent, flipped_latent, alpha_mask in zip(batch_infos, latents, flipped_latents, alpha_masks):
+            save_latents_to_disk(
+                info.latents_npz,
+                latent,
+                info.latents_original_size,
+                info.latents_crop_ltrb,
+                flipped_latent,
+                alpha_mask,
+            )
+
     vae.to("cpu")
     torch.cuda.empty_cache()
 
@@ -611,4 +555,3 @@ def get_vae_scale_and_shift(vae_type):
          return 0.41407, 0.0
     
     return sdxl_model_util.VAE_SCALE_FACTOR, 0.0
-
