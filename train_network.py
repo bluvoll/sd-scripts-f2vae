@@ -162,7 +162,11 @@ class NetworkTrainer:
         vae.eval()
         with torch.no_grad():
             train_dataset_group.cache_latents(
-                vae, args.vae_batch_size, args.cache_latents_to_disk, accelerator.is_main_process
+                vae,
+                args.vae_batch_size,
+                args.cache_latents_to_disk,
+                accelerator.is_main_process,
+                getattr(args, "skip_existing", False),
             )
         vae.to("cpu")
         clean_memory_on_device(accelerator.device)

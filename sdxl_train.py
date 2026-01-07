@@ -471,7 +471,13 @@ def train(args):
             vae.requires_grad_(False)
             vae.eval()
             with torch.no_grad():
-                train_dataset_group.cache_latents(vae, args.vae_batch_size, args.cache_latents_to_disk, accelerator.is_main_process)
+                train_dataset_group.cache_latents(
+                    vae,
+                    args.vae_batch_size,
+                    args.cache_latents_to_disk,
+                    accelerator.is_main_process,
+                    args.skip_existing,
+                )
             vae.to("cpu")
             clean_memory_on_device(accelerator.device)
 
@@ -618,14 +624,17 @@ def train(args):
     # dataloaderを準備する
     # DataLoaderのプロセス数：0 は persistent_workers が使えないので注意
     n_workers = min(args.max_data_loader_n_workers, os.cpu_count())  # cpu_count or max_data_loader_n_workers
-    train_dataloader = torch.utils.data.DataLoader(
-        train_dataset_group,
+    dataloader_kwargs = dict(
+        dataset=train_dataset_group,
         batch_size=1,
         shuffle=True,
         collate_fn=collator,
         num_workers=n_workers,
         persistent_workers=args.persistent_data_loader_workers,
     )
+    if args.prefetch_factor is not None and n_workers > 0:
+        dataloader_kwargs["prefetch_factor"] = args.prefetch_factor
+    train_dataloader = torch.utils.data.DataLoader(**dataloader_kwargs)
 
     # 学習ステップ数を計算する
     if args.max_train_epochs is not None:
@@ -1197,6 +1206,12 @@ def setup_parser() -> argparse.ArgumentParser:
         type=float,
         default=None,
         help="apply a constant latent shift before scaling (e.g. Flux-style offset) / スケーリング前に潜在表現へ定数シフトを適用する",
+    )
+    parser.add_argument(
+        "--prefetch_factor",
+        type=int,
+        default=None,
+        help="DataLoader prefetch_factor (batches per worker to pre-load). Only used when num_workers > 0; default None uses PyTorch default (2).",
     )
     parser.add_argument(
         "--disable_cross_attn_mask",
