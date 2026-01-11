@@ -24,3 +24,16 @@ annealing.toml
 caching.toml
 tools/black-forest-labs/FLUX.2-dev/vae/diffusion_pytorch_model.safetensors
 tools/black-forest-labs/FLUX.2-dev/vae/config.json
+tools/black-forest-labs.zip
+.gitignore
+current.zip
+ai.toml
+config1.toml
+config1.toml
+config2.toml
+dataset1.toml
+json.toml
+launch_all_train.sh
+.gitignore
+sizes.json
+launch_all_train.sh
