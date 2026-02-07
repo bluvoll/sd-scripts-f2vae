@@ -180,7 +180,19 @@ def load_custom_sdxl_checkpoint(ckpt_path, map_location, dtype=None, custom_vae_
 def load_latents_npz_custom(path: str):
     with open(path, "rb") as f:
         with np.load(f, allow_pickle=False) as data:
-            return data["latents"].copy()
+            latents = data["latents"]
+            latents_dtype = None
+            if "latents_dtype" in data:
+                try:
+                    latents_dtype = str(data["latents_dtype"].item() if hasattr(data["latents_dtype"], "item") else data["latents_dtype"])
+                except Exception:
+                    latents_dtype = None
+
+            if latents_dtype == "bfloat16" or (latents_dtype is None and latents.dtype == np.uint16):
+                latents = torch.from_numpy(latents.view(np.uint16)).view(torch.bfloat16).float().numpy()
+            else:
+                latents = latents.copy()
+            return latents
 
 def use_reflection_padding(vae):
     """Set all Conv2d layers with padding to use reflection padding."""
@@ -298,7 +310,7 @@ def load_custom_vae(vae_path, vae_type, dtype, device):
         vae = AutoencoderKLFlux2.from_pretrained(
             "black-forest-labs/FLUX.2-dev",
             subfolder="vae",
-            torch_dtype=torch.float32,
+            torch_dtype=dtype,
         )
     else:
         # Load from path
@@ -319,7 +331,7 @@ def load_custom_vae(vae_path, vae_type, dtype, device):
                 print(f"  Loading via from_pretrained (subfolder={subfolder})...")
                 try:
                     if vae_type == 'flux2':
-                        vae = AutoencoderKLFlux2.from_pretrained(vae_path, subfolder=subfolder, torch_dtype=torch.float32)
+                        vae = AutoencoderKLFlux2.from_pretrained(vae_path, subfolder=subfolder, torch_dtype=dtype)
                     else:
                         vae = AutoencoderKL.from_pretrained(vae_path, subfolder=subfolder)
                         
@@ -346,7 +358,7 @@ def load_custom_vae(vae_path, vae_type, dtype, device):
                      print(f"  Found config.json at {config_path}. Using parent dir as pretrained source.")
                      try:
                          # Attempt to load structure from parent dir
-                         vae = AutoencoderKLFlux2.from_pretrained(parent_dir, torch_dtype=torch.float32)
+                         vae = AutoencoderKLFlux2.from_pretrained(parent_dir, torch_dtype=dtype)
                          print("  Successfully initialized structure from local config.")
                      except Exception as e:
                          print(f"  Parent dir load failed: {e}. Fallback to HF config.")
@@ -354,7 +366,7 @@ def load_custom_vae(vae_path, vae_type, dtype, device):
                  if vae is None:
                      try:
                          print("  Initializing Flux2 structure from 'black-forest-labs/FLUX.2-dev' to ensure correct config...")
-                         vae = AutoencoderKLFlux2.from_pretrained("black-forest-labs/FLUX.2-dev", subfolder="vae", torch_dtype=torch.float32)
+                         vae = AutoencoderKLFlux2.from_pretrained("black-forest-labs/FLUX.2-dev", subfolder="vae", torch_dtype=dtype)
                      except Exception as e:
                          print(f"  Warning: Could not fetch config from HF ({e}). Using default init (might fail if config missing).")
                          # If we can't get it from HF, we are stuck unless we have config.

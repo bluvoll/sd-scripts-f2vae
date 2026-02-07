@@ -39,6 +39,13 @@ def setup_parser():
     
     parser.add_argument("--mixed_precision", type=str, default="bf16") # Used for weight_dtype
     parser.add_argument("--full_bf16", action="store_true")
+    parser.add_argument(
+        "--save_precision",
+        type=str,
+        default="auto",
+        choices=["auto", "float32", "float16", "bfloat16"],
+        help="Precision used when writing latents to disk. `auto` stores fp16 for half/bfloat16 inference, otherwise fp32. `bfloat16` stores compact uint16 payload plus dtype tag."
+    )
 
     parser.add_argument("--tokenizer_cache_dir", type=str, default=None, help="Directory for tokenizer cache")
     parser.add_argument("--max_token_length", type=int, default=None, help="Max token length")
@@ -47,7 +54,7 @@ def setup_parser():
     
     return parser
 
-def save_npz_async(file_path, latents, original_size, crop_ltrb, flipped_latents=None, alpha_mask=None):
+def save_npz_async(file_path, latents, original_size, crop_ltrb, flipped_latents=None, alpha_mask=None, latents_dtype=None):
     """Save .npz in a separate thread."""
     save_dict = {
         "latents": latents,
@@ -58,6 +65,8 @@ def save_npz_async(file_path, latents, original_size, crop_ltrb, flipped_latents
         save_dict["flipped_latents"] = flipped_latents
     if alpha_mask is not None:
         save_dict["alpha_mask"] = alpha_mask
+    if latents_dtype is not None:
+        save_dict["latents_dtype"] = latents_dtype
         
     np.savez(file_path, **save_dict)
 
@@ -78,7 +87,26 @@ def main():
         weight_dtype = torch.bfloat16
         
     vae_dtype = torch.float32 if args.no_half_vae else weight_dtype
+
+    if args.save_precision == "float16":
+        save_mode = "float16"
+    elif args.save_precision == "float32":
+        save_mode = "float32"
+    elif args.save_precision == "bfloat16":
+        save_mode = "bfloat16"
+    else:
+        # auto: prefer fp16 for half/bf16 inference, fp32 otherwise
+        if vae_dtype == torch.bfloat16:
+            save_mode = "float16"  # bfloat16 is stored as fp16 unless explicitly requested
+        elif vae_dtype == torch.float16:
+            save_mode = "float16"
+        else:
+            save_mode = "float32"
+
+    save_np_dtype = {"float16": np.float16, "float32": np.float32}.get(save_mode, None)
+
     print(f"Device: {device}, VAE Dtype: {vae_dtype}")
+    print(f"Latents save mode: {save_mode}")
 
     # Optimizations
     torch.backends.cuda.matmul.allow_tf32 = True
@@ -97,19 +125,11 @@ def main():
         vae_path = args.vae if args.vae else args.pretrained_model_name_or_path
         vae = custom_sdxl_utils.load_custom_vae(vae_path, args.vae_type, vae_dtype, device)
     else:
-        # Standard SDXL Load
-        # We use a simplified load since we only need VAE
-        # Try finding VAE in args.vae or model path
+        # Standard SDXL Load — only the VAE, never the full pipeline
         target_path = args.vae if args.vae else args.pretrained_model_name_or_path
         print(f"Loading standard VAE from: {target_path}")
-        try:
-            # Simplest load: likely diffusers format
-            from diffusers import AutoencoderKL
-            vae = AutoencoderKL.from_pretrained(target_path, subfolder="vae" if not args.vae else None, torch_dtype=vae_dtype)
-        except Exception as e:
-            # Fallback to full model load util
-            print(f"Direct load failed ({e}), using library util...")
-            _, _, _, vae, _, _, _ = sdxl_train_util.load_target_model(args, argparse.Namespace(), "sdxl", weight_dtype)
+        from diffusers import AutoencoderKL
+        vae = AutoencoderKL.from_pretrained(target_path, subfolder="vae" if not args.vae else None, torch_dtype=vae_dtype)
             
     vae.to(device, dtype=vae_dtype)
     # Channels Last Optimization for NVIDIA GPUs (especially 4090 with Tensor Cores)
@@ -131,15 +151,21 @@ def main():
         shift_factor = shift_factor if shift_factor is not None else 0.0
 
 
-    # Load Tokenizers (Required by Dataset init)
-    print("Loading tokenizers...")
-    try:
-        tokenizer1, tokenizer2 = sdxl_train_util.load_tokenizers(args)
-        tokenizers = [tokenizer1, tokenizer2]
-    except Exception as e:
-        print(f"Warning: Failed to load SDXL tokenizers: {e}")
-        print("Attempting to proceed with dummy tokenizers (might fail if dataset relies on them)...")
-        tokenizers = None
+    # Load Tokenizers (only needed for SDXL path — custom VAE types don't use them)
+    tokenizers = None
+    if not args.vae_type:
+        print("Loading tokenizers...")
+        try:
+            tokenizer1, tokenizer2 = sdxl_train_util.load_tokenizers(args)
+            tokenizers = [tokenizer1, tokenizer2]
+        except Exception as e:
+            print(f"Warning: Failed to load SDXL tokenizers: {e}")
+    else:
+        print("Skipping tokenizer loading (not needed for latent caching with custom VAE).")
+        # Dataset init accesses tokenizer.model_max_length when max_token_length is None,
+        # so provide a safe default to avoid the access entirely.
+        if args.max_token_length is None:
+            args.max_token_length = 75
 
     # Prepare Dataset
     print("Preparing Dataset...")
@@ -169,8 +195,14 @@ def main():
         print("Nothing to do.")
         return
 
-    # Sort by bucket resolution to minimize padding/resizing changes in batches
+    # Group images by bucket resolution, then shuffle the groups so large and small
+    # resolutions are interleaved (avoids monotonically increasing GPU time).
+    import random
+    from itertools import groupby
     all_image_infos.sort(key=lambda x: (x.bucket_reso[0], x.bucket_reso[1]))
+    bucket_groups = [list(g) for _, g in groupby(all_image_infos, key=lambda x: x.bucket_reso)]
+    random.shuffle(bucket_groups)
+    all_image_infos = [info for group in bucket_groups for info in group]
 
     # Build global image_to_subset map since DatasetGroup doesn't expose it directly
     global_image_to_subset = {}
@@ -363,7 +395,13 @@ def main():
                 if scale_factor != 1.0:
                     latents = latents * scale_factor
             
-            latents = latents.float().cpu().numpy()
+            # Convert to chosen precision before saving.
+            latents_dtype_tag = save_mode
+            if save_mode == "bfloat16":
+                latents_to_save = latents.to(dtype=torch.bfloat16).cpu().view(torch.uint16).numpy()
+            else:
+                target_torch_dtype = torch.float16 if save_mode == "float16" else torch.float32
+                latents_to_save = latents.to(dtype=target_torch_dtype).cpu().numpy().astype(save_np_dtype, copy=False)
             t_gpu = time.time() - t_start_gpu
             
             # Profiling Stats
@@ -389,10 +427,11 @@ def main():
                 executor.submit(
                     save_npz_async,
                     info.latents_npz,
-                    latents[i],
+                    latents_to_save[i],
                     orig_sizes[i],
                     crops[i],
-                    None, None
+                    None, None,
+                    latents_dtype_tag
                 )
             
             t_start_data = time.time()
