@@ -28,6 +28,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+from library.edm2_loss_utils import prepare_edm2_loss_weighting, plot_edm2_loss_weighting_check, plot_edm2_loss_weighting
 import library.config_util as config_util
 import library.sdxl_train_util as sdxl_train_util
 import library.custom_sdxl_utils as custom_sdxl_utils
@@ -804,6 +805,11 @@ def train(args):
     if args.zero_terminal_snr:
         custom_train_functions.fix_noise_scheduler_betas_for_zero_terminal_snr(noise_scheduler)
 
+    edm2_model, edm2_optimizer, edm2_lr_scheduler = prepare_edm2_loss_weighting(args, noise_scheduler, accelerator)
+
+    if args.edm2_loss_weighting:
+        training_models.append(edm2_model)
+
     if accelerator.is_main_process:
         init_kwargs = {}
         if args.wandb_run_name:
@@ -822,6 +828,14 @@ def train(args):
     )
 
     loss_recorder = train_util.LossRecorder()
+
+    if args.edm2_loss_weighting:
+        loss_scaled_recorder = train_util.LossRecorder()
+        loss_edm2_recorder = train_util.LossRecorder()
+
+    if args.edm2_loss_weighting:
+        plot_edm2_loss_weighting(args, 0, edm2_model, 1000, accelerator.device)
+
     for epoch in range(num_train_epochs):
         accelerator.print(f"\nepoch {epoch+1}/{num_train_epochs}")
         current_epoch.value = epoch + 1
@@ -1002,12 +1016,34 @@ def train(args):
                 if loss.ndim != 0:
                     loss = loss.mean()
 
+                pre_scaling_loss = loss.detach()
+
+                if args.edm2_loss_weighting:
+                    loss, loss_scaled = edm2_model(loss, timesteps)
+                    loss_scaled = loss_scaled.mean()
+                else:
+                    loss_scaled = None
+
+                if loss.ndim != 0:
+                    loss = loss.mean()
+
                 accelerator.backward(loss)
+
+                edm2_loss = loss
+                loss = pre_scaling_loss
+
+                # Sync EDM2 gradients explicitly across GPUs (for DDP and DeepSpeed compatibility)
+                if args.edm2_loss_weighting and accelerator.sync_gradients:
+                    for param in edm2_model.parameters():
+                        if param.grad is not None:
+                            param.grad = accelerator.reduce(param.grad, reduction="mean")
 
                 if not (args.fused_backward_pass or args.fused_optimizer_groups):
                     if accelerator.sync_gradients and args.max_grad_norm != 0.0:
                         params_to_clip = []
                         for m in training_models:
+                            if args.edm2_loss_weighting and m is edm2_model:
+                                continue
                             params_to_clip.extend(m.parameters())
                         accelerator.clip_grad_norm_(params_to_clip, args.max_grad_norm)
 
@@ -1020,6 +1056,18 @@ def train(args):
                     if args.fused_optimizer_groups:
                         for i in range(1, len(optimizers)):
                             lr_schedulers[i].step()
+
+                if args.edm2_loss_weighting:
+                    if accelerator.sync_gradients:
+                        edm2_grad_norm = (args.edm2_loss_weighting_max_grad_norm
+                                         if args.edm2_loss_weighting_max_grad_norm is not None
+                                         else args.max_grad_norm)
+                        if edm2_grad_norm != 0.0:
+                            edm2_params = list(accelerator.unwrap_model(edm2_model).parameters())
+                            accelerator.clip_grad_norm_(edm2_params, edm2_grad_norm)
+                    edm2_optimizer.step()
+                    edm2_lr_scheduler.step()
+                    edm2_optimizer.zero_grad(set_to_none=True)
 
             # Checks if the accelerator has performed an optimization step behind the scenes
             if accelerator.sync_gradients:
@@ -1062,6 +1110,22 @@ def train(args):
                             ckpt_info,
                         )
 
+                        if args.edm2_loss_weighting:
+                            loss_weights_ckpt_name = train_util.get_step_ckpt_name(args, "." + args.save_model_as, global_step, "_edm2_loss_weights")
+                            loss_weights_file = os.path.join(args.output_dir, loss_weights_ckpt_name)
+                            accelerator.print(f"saving edm2 loss weights: {loss_weights_file}")
+                            accelerator.unwrap_model(edm2_model).save_weights(loss_weights_file, edm2_model.dtype, None)
+
+                            remove_step_no = train_util.get_remove_step_no(args, global_step)
+                            if remove_step_no is not None:
+                                remove_loss_weights_ckpt_name = train_util.get_step_ckpt_name(args, "." + args.save_model_as, remove_step_no, "_edm2_loss_weights")
+                                remove_loss_weights_file = os.path.join(args.output_dir, remove_loss_weights_ckpt_name)
+                                if os.path.exists(remove_loss_weights_file):
+                                    os.remove(remove_loss_weights_file)
+
+                if plot_edm2_loss_weighting_check(args, global_step):
+                    plot_edm2_loss_weighting(args, global_step, edm2_model, 1000, accelerator.device)
+
             current_loss = loss.detach().item()  # 平均なのでbatch sizeは関係ないはず
             if args.logging_dir is not None:
                 logs = {"loss": current_loss}
@@ -1070,7 +1134,20 @@ def train(args):
                 else:
                     append_block_lr_to_logs(block_lrs, logs, lr_scheduler, args.optimizer_type)  # U-Net is included in block_lrs
 
+                if args.edm2_loss_weighting:
+                    edm2_loss_val = edm2_loss.detach().item()
+                    logs["loss/scaled"] = loss_scaled.detach().item() if loss_scaled is not None else 0.0
+                    logs["loss/edm2"] = edm2_loss_val
+                    logs["lr/edm2"] = edm2_lr_scheduler.get_last_lr()[0]
+
                 accelerator.log(logs, step=global_step)
+
+            if args.edm2_loss_weighting and global_step % 10 == 0:
+                edm2_loss_val = edm2_loss.detach().item()
+                ratio = edm2_loss_val / current_loss if current_loss > 0 else 0.0
+                accelerator.print(
+                    f"[EDM2] step {global_step}: raw_loss={current_loss:.4f}, edm2_loss={edm2_loss_val:.4f} (ratio: {ratio:.2f}x)"
+                )
 
             loss_recorder.add(epoch=epoch, step=step, loss=current_loss)
             avr_loss: float = loss_recorder.moving_average
@@ -1107,6 +1184,20 @@ def train(args):
                     logit_scale,
                     ckpt_info,
                 )
+
+                if args.edm2_loss_weighting:
+                    if (epoch + 1) % args.save_every_n_epochs == 0:
+                        loss_weights_ckpt_name = train_util.get_epoch_ckpt_name(args, "." + args.save_model_as, epoch + 1, "_edm2_loss_weights")
+                        loss_weights_file = os.path.join(args.output_dir, loss_weights_ckpt_name)
+                        accelerator.print(f"saving edm2 loss weights: {loss_weights_file}")
+                        accelerator.unwrap_model(edm2_model).save_weights(loss_weights_file, edm2_model.dtype, None)
+
+                        remove_epoch_no = train_util.get_remove_epoch_no(args, epoch + 1)
+                        if remove_epoch_no is not None:
+                            remove_loss_weights_ckpt_name = train_util.get_epoch_ckpt_name(args, "." + args.save_model_as, remove_epoch_no, "_edm2_loss_weights")
+                            remove_loss_weights_file = os.path.join(args.output_dir, remove_loss_weights_ckpt_name)
+                            if os.path.exists(remove_loss_weights_file):
+                                os.remove(remove_loss_weights_file)
 
         sdxl_train_util.sample_images(
             accelerator,
@@ -1151,6 +1242,12 @@ def train(args):
             ckpt_info,
         )
         logger.info("model saved.")
+
+        if args.edm2_loss_weighting:
+            loss_weights_ckpt_name = train_util.get_last_ckpt_name(args, "." + args.save_model_as, "_edm2_loss_weights")
+            loss_weights_file = os.path.join(args.output_dir, loss_weights_ckpt_name)
+            logger.info(f"saving edm2 loss weights: {loss_weights_file}")
+            edm2_model.save_weights(loss_weights_file, edm2_model.dtype, None)
 
 
 def setup_parser() -> argparse.ArgumentParser:
@@ -1306,6 +1403,46 @@ def setup_parser() -> argparse.ArgumentParser:
         help="For full caption dropout, use zero conditioning instead of empty caption"
     )
     
+    # EDM2 loss weighting arguments
+    parser.add_argument("--edm2_loss_weighting", action="store_true", help="Use EDM2 loss weighting.")
+    parser.add_argument("--edm2_loss_weighting_optimizer", type=str, default="torch.optim.AdamW",
+        help="Fully qualified optimizer class name for the EDM2 loss weighting optimizer.")
+    parser.add_argument("--edm2_loss_weighting_optimizer_lr", type=float, default=2e-2,
+        help="Learning rate for the EDM2 loss weighting optimizer.")
+    parser.add_argument("--edm2_loss_weighting_optimizer_args", type=str,
+        default=r"{'weight_decay': 0, 'betas': (0.9,0.999)}",
+        help="A dict literal string of optimizer args for the EDM2 loss weighting optimizer.")
+    parser.add_argument("--edm2_loss_weighting_lr_scheduler", action="store_true",
+        help="Use lr scheduler with EDM2 loss weighting optimizer.")
+    parser.add_argument("--edm2_loss_weighting_lr_scheduler_warmup_percent", type=float, default=0.1,
+        help="Percent of training steps to use for warmup.")
+    parser.add_argument("--edm2_loss_weighting_lr_scheduler_constant_percent", type=float, default=0.1,
+        help="Percent of training steps to maintain constant LR before decay.")
+    parser.add_argument("--edm2_loss_weighting_lr_scheduler_decay_scaling", type=float, default=1.0,
+        help="Scaling factor for the decay rate of the EDM2 lr scheduler.")
+    parser.add_argument("--edm2_loss_weighting_num_channels", type=int, default=128,
+        help="Number of Fourier feature channels for the loss weighting module.")
+    parser.add_argument("--edm2_loss_weighting_initial_weights", type=str, default=None,
+        help="Path to initial EDM2 loss weighting model weights.")
+    parser.add_argument("--edm2_loss_weighting_generate_graph", action="store_true",
+        help="Generate graph images showing loss weighting per timestep.")
+    parser.add_argument("--edm2_loss_weighting_generate_graph_every_x_steps", type=int, default=20,
+        help="Generate a graph image every x steps.")
+    parser.add_argument("--edm2_loss_weighting_generate_graph_output_dir", type=str, default=None,
+        help="Parent directory for loss weighting graph images.")
+    parser.add_argument("--edm2_loss_weighting_generate_graph_y_limit", type=int, default=None,
+        help="Max y-axis limit for the graph. If not set, uses dynamic scaling.")
+    parser.add_argument("--edm2_loss_weighting_importance_weighting", action="store_true",
+        help="Weight EDM2 loss scaling by importance (min-SNR-based heuristic).")
+    parser.add_argument("--edm2_loss_weighting_importance_weighting_max", type=float, default=10.0,
+        help="Max loss weighting when using EDM2 importance weighting.")
+    parser.add_argument("--edm2_loss_weighting_importance_min_snr_gamma", type=float, default=1.0,
+        help="Min SNR gamma used for EDM2 importance weighting heuristic.")
+    parser.add_argument("--edm2_loss_weighting_importance_weighting_safety_override", action="store_true",
+        help="Allow stacking debiased loss / min_snr_gamma with EDM2 importance weighting.")
+    parser.add_argument("--edm2_loss_weighting_max_grad_norm", type=float, default=None,
+        help="Max gradient norm for EDM2 model. Uses --max_grad_norm if not set. 0 to disable.")
+
     # Custom VAE arguments
     parser.add_argument("--skip_existing", action="store_true", help="Skip latent caching if npz file already exists")
     parser.add_argument("--vae_type", type=str, default=None, help="Specify VAE type: sdxl, flux, sana, etc.")

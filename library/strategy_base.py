@@ -682,11 +682,34 @@ class LatentsCachingStrategy:
         if "latents" + key_reso_suffix not in npz:
             raise ValueError(f"latents{key_reso_suffix} not found in {npz_path}")
 
-        latents = npz["latents" + key_reso_suffix]
+        latents_dtype = None
+        tag_key = "latents_dtype" + key_reso_suffix if key_reso_suffix else "latents_dtype"
+        if tag_key in npz:
+            try:
+                latents_dtype = str(npz[tag_key].item() if hasattr(npz[tag_key], "item") else npz[tag_key])
+            except Exception:
+                latents_dtype = None
+
+        def _restore_bfloat16_if_needed(arr):
+            if arr is None:
+                return None
+            if latents_dtype == "bfloat16" or (latents_dtype is None and arr.dtype == np.uint16):
+                return torch.from_numpy(arr.view(np.uint16)).view(torch.bfloat16).float().numpy()
+            return arr
+
+        latents = _restore_bfloat16_if_needed(npz["latents" + key_reso_suffix])
         original_size = npz["original_size" + key_reso_suffix].tolist()
         crop_ltrb = npz["crop_ltrb" + key_reso_suffix].tolist()
-        flipped_latents = npz["latents_flipped" + key_reso_suffix] if "latents_flipped" + key_reso_suffix in npz else None
-        alpha_mask = npz["alpha_mask" + key_reso_suffix] if "alpha_mask" + key_reso_suffix in npz else None
+        flipped_latents = (
+            _restore_bfloat16_if_needed(npz["latents_flipped" + key_reso_suffix])
+            if "latents_flipped" + key_reso_suffix in npz
+            else None
+        )
+        alpha_mask = (
+            _restore_bfloat16_if_needed(npz["alpha_mask" + key_reso_suffix])
+            if "alpha_mask" + key_reso_suffix in npz
+            else None
+        )
         return latents, original_size, crop_ltrb, flipped_latents, alpha_mask
 
     def save_latents_to_disk(

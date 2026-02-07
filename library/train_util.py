@@ -2321,11 +2321,26 @@ def load_latents_from_disk(
     if "latents" not in npz:
         raise ValueError(f"error: npz is old format. please re-generate {npz_path}")
 
-    latents = npz["latents"]
+    latents_dtype = None
+    if "latents_dtype" in npz:
+        try:
+            latents_dtype = str(npz["latents_dtype"].item() if hasattr(npz["latents_dtype"], "item") else npz["latents_dtype"])
+        except Exception:
+            latents_dtype = None
+
+    def _restore_bfloat16_if_needed(arr):
+        if arr is None:
+            return None
+        if latents_dtype == "bfloat16" or (latents_dtype is None and arr.dtype == np.uint16):
+            # Stored as uint16 payload; reinterpret to bfloat16 then upcast for downstream FloatTensor conversion
+            return torch.from_numpy(arr.view(np.uint16)).view(torch.bfloat16).float().numpy()
+        return arr
+
+    latents = _restore_bfloat16_if_needed(npz["latents"])
     original_size = npz["original_size"].tolist()
     crop_ltrb = npz["crop_ltrb"].tolist()
-    flipped_latents = npz["latents_flipped"] if "latents_flipped" in npz else None
-    alpha_mask = npz["alpha_mask"] if "alpha_mask" in npz else None
+    flipped_latents = _restore_bfloat16_if_needed(npz["latents_flipped"]) if "latents_flipped" in npz else None
+    alpha_mask = _restore_bfloat16_if_needed(npz["alpha_mask"]) if "alpha_mask" in npz else None
     return latents, original_size, crop_ltrb, flipped_latents, alpha_mask
 
 
@@ -5074,19 +5089,19 @@ def default_if_none(value, default):
     return default if value is None else value
 
 
-def get_epoch_ckpt_name(args: argparse.Namespace, ext: str, epoch_no: int):
+def get_epoch_ckpt_name(args: argparse.Namespace, ext: str, epoch_no: int, output_name_append: str = ""):
     model_name = default_if_none(args.output_name, DEFAULT_EPOCH_NAME)
-    return EPOCH_FILE_NAME.format(model_name, epoch_no) + ext
+    return EPOCH_FILE_NAME.format(model_name + output_name_append, epoch_no) + ext
 
 
-def get_step_ckpt_name(args: argparse.Namespace, ext: str, step_no: int):
+def get_step_ckpt_name(args: argparse.Namespace, ext: str, step_no: int, output_name_append: str = ""):
     model_name = default_if_none(args.output_name, DEFAULT_STEP_NAME)
-    return STEP_FILE_NAME.format(model_name, step_no) + ext
+    return STEP_FILE_NAME.format(model_name + output_name_append, step_no) + ext
 
 
-def get_last_ckpt_name(args: argparse.Namespace, ext: str):
+def get_last_ckpt_name(args: argparse.Namespace, ext: str, output_name_append: str = ""):
     model_name = default_if_none(args.output_name, DEFAULT_LAST_OUTPUT_NAME)
-    return model_name + ext
+    return model_name + output_name_append + ext
 
 
 def get_remove_epoch_no(args: argparse.Namespace, epoch_no: int):
@@ -6009,3 +6024,10 @@ class LossRecorder:
     @property
     def moving_average(self) -> float:
         return self.loss_total / len(self.loss_list)
+
+
+def determine_grad_sync_context(args, accelerator, sync_gradients, training_model, edm2_model=None):
+    if edm2_model is not None:
+        return accelerator.accumulate(training_model, edm2_model)
+    else:
+        return accelerator.accumulate(training_model)
