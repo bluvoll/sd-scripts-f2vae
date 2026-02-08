@@ -34,7 +34,8 @@ def prepare_edm2_loss_weighting(args, noise_scheduler, accelerator):
                                                                     dtype=torch.float32,
                                                                     use_importance_weights=args.edm2_loss_weighting_importance_weighting,
                                                                     importance_weights_max_weight=float(args.edm2_loss_weighting_importance_weighting_max) if args.edm2_loss_weighting_importance_weighting_max is not None else 10.0,
-                                                                    importance_weights_min_snr_gamma=float(args.edm2_loss_weighting_importance_min_snr_gamma) if args.edm2_loss_weighting_importance_min_snr_gamma is not None else 1.0)
+                                                                    importance_weights_min_snr_gamma=float(args.edm2_loss_weighting_importance_min_snr_gamma) if args.edm2_loss_weighting_importance_min_snr_gamma is not None else 1.0,
+                                                                    flow_model=getattr(args, "flow_model", False))
         if args.edm2_loss_weighting_initial_weights:
             edm2_model.load_weights(args.edm2_loss_weighting_initial_weights)
 
