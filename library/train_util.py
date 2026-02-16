@@ -297,6 +297,11 @@ class BucketManager:
                     f"Image {image_width}x{image_height} is too small for no_upscale with reso_steps={self.reso_steps}, "
                     f"falling back to nearest predefined bucket (will upscale)"
                 )
+                # In no_upscale mode, predefined buckets may not exist yet — create them if needed
+                if not hasattr(self, 'predefined_aspect_ratios') or self.predefined_aspect_ratios is None:
+                    resos = model_util.make_bucket_resolutions(self.max_reso, self.min_size, self.max_size, self.reso_steps)
+                    self.set_predefined_resos(resos)
+
                 ar_errors = self.predefined_aspect_ratios - aspect_ratio
                 predefined_bucket_id = np.abs(ar_errors).argmin()
                 reso = self.predefined_resos[predefined_bucket_id]
