@@ -2566,6 +2566,9 @@ def load_arbitrary_dataset(args, tokenizer) -> MinimalDataset:
 
 
 def load_image(image_path, alpha=False):
+    from PIL import PngImagePlugin
+    # Some PNGs have large embedded ICC profiles that exceed PIL's default chunk limit
+    PngImagePlugin.MAX_TEXT_CHUNK = 100 * 1024 * 1024  # 100 MB
     try:
         with Image.open(image_path) as image:
             if alpha:
