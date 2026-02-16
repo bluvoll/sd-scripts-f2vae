@@ -5496,7 +5496,7 @@ def get_noise_noisy_latents_and_timesteps(
     flow_model_enabled = getattr(args, "flow_model", False)
 
     if flow_model_enabled:
-        timestep_max = noise_scheduler.config.num_train_timesteps - 1
+        timestep_max = noise_scheduler.config.num_train_timesteps
         distribution = getattr(args, "flow_timestep_distribution", "logit_normal")
         if distribution == "logit_normal":
             logits = torch.normal(
@@ -5533,7 +5533,7 @@ def get_noise_noisy_latents_and_timesteps(
             t_ref = sigmas
             sigmas = ratios * t_ref / (1 + (ratios - 1) * t_ref)
 
-        timesteps = torch.clamp((sigmas * timestep_max).long(), 0, timestep_max)
+        timesteps = torch.clamp((sigmas * timestep_max).long(), 0, timestep_max - 1)
         _, huber_c = get_timesteps_and_huber_c(
             args,
             0,
