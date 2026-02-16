@@ -290,9 +290,24 @@ class BucketManager:
             # 画像のサイズ未満をbucketのサイズとする（paddingせずにcroppingする）
             bucket_width = resized_size[0] - resized_size[0] % self.reso_steps
             bucket_height = resized_size[1] - resized_size[1] % self.reso_steps
-            # logger.info(f"use arbitrary {image_width}, {image_height}, {resized_size}, {bucket_width}, {bucket_height}")
 
-            reso = (bucket_width, bucket_height)
+            # If a dimension is too small for no_upscale, fall back to upscaling to nearest bucket
+            if bucket_width < self.reso_steps or bucket_height < self.reso_steps:
+                logger.warning(
+                    f"Image {image_width}x{image_height} is too small for no_upscale with reso_steps={self.reso_steps}, "
+                    f"falling back to nearest predefined bucket (will upscale)"
+                )
+                ar_errors = self.predefined_aspect_ratios - aspect_ratio
+                predefined_bucket_id = np.abs(ar_errors).argmin()
+                reso = self.predefined_resos[predefined_bucket_id]
+                ar_reso = reso[0] / reso[1]
+                if aspect_ratio > ar_reso:
+                    scale = reso[1] / image_height
+                else:
+                    scale = reso[0] / image_width
+                resized_size = (int(image_width * scale + 0.5), int(image_height * scale + 0.5))
+            else:
+                reso = (bucket_width, bucket_height)
 
         self.add_if_new_reso(reso)
 
