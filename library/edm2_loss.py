@@ -66,14 +66,10 @@ class AdaptiveLossWeightMLP(nn.Module):
         num_timesteps = noise_scheduler.config.num_train_timesteps
         self.alphas_cumprod = noise_scheduler.alphas_cumprod.to(device=device, dtype=dtype)
         if flow_model:
-            # Flow matching: timestep IS the noise level (linear), standardize t/max
-            t_norm = torch.linspace(0, 1, num_timesteps, device=device, dtype=dtype)
-            self.register_buffer("flow_t_mean", t_norm.mean().clone())
-            self.register_buffer("flow_t_std", t_norm.std().clone())
-            logger.info(f"EDM2 using flow matching c_noise: standardized t/999 (mean={self.flow_t_mean:.4f}, std={self.flow_t_std:.4f})")
+            # Flow matching: c_noise = log(t/(1-t)) — logit, the direct analog of EDM2's log(sigma)
+            logger.info("EDM2 using flow matching c_noise: log(t/(1-t)) (logit)")
         else:
             logger.info("EDM2 using DDPM c_noise: standardized alphas_cumprod")
-        if not flow_model:
             self.a_bar_mean = self.alphas_cumprod.mean()
             self.a_bar_std = self.alphas_cumprod.std()
         self.logvar_fourier = FourierFeatureExtractor(logvar_channels, dtype=dtype)
@@ -111,10 +107,10 @@ class AdaptiveLossWeightMLP(nn.Module):
 
     def _forward(self, timesteps: torch.Tensor):
         if self.flow_model:
-            # Flow matching: noise level is linear with timestep
+            # Flow matching: c_noise = log(t/(1-t)), the logit — analog of EDM2's log(sigma)
             num_timesteps = self.alphas_cumprod.shape[0]
-            t_norm = timesteps.to(self.dtype) / (num_timesteps - 1)
-            c_noise = (t_norm - self.flow_t_mean) / self.flow_t_std
+            t = (timesteps.to(self.dtype) / (num_timesteps - 1)).clamp(1e-6, 1.0 - 1e-6)
+            c_noise = torch.log(t / (1.0 - t))
         else:
             # DDPM: noise level from alphas_cumprod schedule
             a_bar = self.alphas_cumprod[timesteps]
