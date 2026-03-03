@@ -1114,7 +1114,7 @@ def train(args):
                             loss_weights_ckpt_name = train_util.get_step_ckpt_name(args, "." + args.save_model_as, global_step, "_edm2_loss_weights")
                             loss_weights_file = os.path.join(args.output_dir, loss_weights_ckpt_name)
                             accelerator.print(f"saving edm2 loss weights: {loss_weights_file}")
-                            accelerator.unwrap_model(edm2_model).save_weights(loss_weights_file, edm2_model.dtype, None)
+                            accelerator.unwrap_model(edm2_model).save_weights(loss_weights_file, accelerator.unwrap_model(edm2_model).dtype, None)
 
                             remove_step_no = train_util.get_remove_step_no(args, global_step)
                             if remove_step_no is not None:
@@ -1190,7 +1190,7 @@ def train(args):
                         loss_weights_ckpt_name = train_util.get_epoch_ckpt_name(args, "." + args.save_model_as, epoch + 1, "_edm2_loss_weights")
                         loss_weights_file = os.path.join(args.output_dir, loss_weights_ckpt_name)
                         accelerator.print(f"saving edm2 loss weights: {loss_weights_file}")
-                        accelerator.unwrap_model(edm2_model).save_weights(loss_weights_file, edm2_model.dtype, None)
+                        accelerator.unwrap_model(edm2_model).save_weights(loss_weights_file, accelerator.unwrap_model(edm2_model).dtype, None)
 
                         remove_epoch_no = train_util.get_remove_epoch_no(args, epoch + 1)
                         if remove_epoch_no is not None:

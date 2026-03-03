@@ -1,0 +1,3241 @@
+[[datasets]]
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0001"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0002"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0003"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0004"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0005"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0006"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0007"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0008"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0009"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0010"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0011"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0012"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0013"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0014"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0015"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0016"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0017"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0018"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0019"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0020"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0021"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0022"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0023"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0024"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0025"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0026"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0027"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0028"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0029"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0030"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0031"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0032"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0033"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0034"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0035"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0036"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0037"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0038"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0039"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0040"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0041"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0042"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0043"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0044"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0045"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0046"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0047"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0048"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0049"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0050"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0051"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0052"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0053"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0054"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0055"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0056"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0057"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0058"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0059"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0060"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0061"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0062"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0063"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0064"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0065"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0066"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0067"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0068"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0069"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0070"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0071"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0072"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0073"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0074"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0075"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0076"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0077"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0078"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0079"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0080"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0081"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0082"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0083"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0084"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0085"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0086"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0087"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0088"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0089"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0090"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0091"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0092"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0093"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0094"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0095"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0096"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0097"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0098"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0099"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0100"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0101"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0102"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0103"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0104"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0105"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0106"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0107"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0108"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0109"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0110"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0111"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0112"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0113"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0114"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0115"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0116"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0117"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0118"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0119"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0120"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0121"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0122"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0123"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0124"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0125"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0126"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0127"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0128"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0129"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0130"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0131"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0132"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0133"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0134"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0135"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0136"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0137"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0138"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0139"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0140"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0141"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0142"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0143"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0144"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0145"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0146"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0147"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0148"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0149"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0150"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0151"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0152"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0153"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0154"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0155"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0156"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0157"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0158"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0159"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0160"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0161"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0162"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0163"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0164"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0165"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0166"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0167"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0168"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0169"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0170"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0171"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0172"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0173"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0174"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0175"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0176"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0177"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0178"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0179"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0180"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0181"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0182"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0183"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0184"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0185"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0186"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0187"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0188"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0189"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0190"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0191"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0192"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0193"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0194"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0195"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0196"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0197"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0198"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0199"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0200"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0201"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0202"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0203"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0204"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0205"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0206"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0207"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0208"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0209"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0210"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0211"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0212"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0213"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0214"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0215"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0216"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0217"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0218"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0219"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0220"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0221"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0222"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0223"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0224"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0225"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0226"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0227"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0228"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0229"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0230"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0231"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0232"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0233"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0234"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0235"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0236"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0237"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0238"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0239"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0240"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0241"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0242"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0243"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0244"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0245"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0246"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0247"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0248"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0249"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0250"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0251"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0252"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0253"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0254"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0255"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0256"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0257"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0258"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0259"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0260"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0261"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0262"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0263"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0264"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0265"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0266"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0267"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0268"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0269"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0270"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0271"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0272"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0273"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0274"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0275"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0276"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0277"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0278"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0279"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0280"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0281"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0282"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0283"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0284"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0285"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0286"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0287"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0288"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0289"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0290"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0291"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0292"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0293"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0294"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0295"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0296"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0297"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0298"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0299"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0300"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0301"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0302"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0303"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0304"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0305"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0306"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0307"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0308"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0309"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0310"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0311"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0312"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0313"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0314"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0315"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0316"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0317"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0318"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0319"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0320"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0321"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0322"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0323"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0324"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0325"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0326"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0327"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0328"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0329"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0330"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0331"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0332"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0333"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0334"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0335"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0336"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0337"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0338"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0339"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0340"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0341"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0342"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0343"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0344"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0345"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0346"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0347"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0348"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0349"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0350"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0351"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0352"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0353"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0354"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0355"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0356"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0357"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0358"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0359"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0360"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0361"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0362"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0363"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0364"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0365"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0366"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0367"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0368"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0369"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0370"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0371"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0372"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0373"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0374"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0375"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0376"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0377"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0378"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0379"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0380"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0381"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0382"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0383"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0384"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0385"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0386"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0387"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0388"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0389"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0390"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0391"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0392"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0393"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0394"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0395"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0396"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0397"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0398"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0399"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0400"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0401"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0402"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/1_2025.9/danbooru_0403"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir = "/workspace/danbooru/2_2026.1"
+num_repeats = 1
+shuffle_caption = true
+
+[general]
+resolution = 1024
+enable_bucket = true
+min_bucket_reso = 256
+bucket_no_upscale = true
+max_bucket_reso = 4096
+bucket_reso_steps = 64

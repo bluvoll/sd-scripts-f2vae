@@ -68,6 +68,7 @@ from library.original_unet import UNet2DConditionModel
 from huggingface_hub import hf_hub_download
 import numpy as np
 from PIL import Image
+Image.MAX_IMAGE_PIXELS = None
 import imagesize
 import cv2
 import safetensors.torch
@@ -2567,8 +2568,9 @@ def load_arbitrary_dataset(args, tokenizer) -> MinimalDataset:
 
 def load_image(image_path, alpha=False):
     from PIL import PngImagePlugin
+    Image.MAX_IMAGE_PIXELS = None
     # Some PNGs have large embedded ICC profiles that exceed PIL's default chunk limit
-    PngImagePlugin.MAX_TEXT_CHUNK = 100 * 1024 * 1024  # 100 MB
+    PngImagePlugin.MAX_TEXT_CHUNK = 200 * 1024 * 1024  # 100 MB
     try:
         with Image.open(image_path) as image:
             if alpha:
