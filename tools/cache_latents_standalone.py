@@ -13,6 +13,7 @@ from typing import List, Tuple
 import math
 from contextlib import nullcontext
 import signal
+import sys
 from threading import Event
 
 import numpy as np
@@ -502,7 +503,10 @@ def cache_latents(args: argparse.Namespace) -> None:
     args.vae_shift_factor = shift_factor
 
     def handle_interrupt(signum, frame):
-        logger.warning(f"Received signal {signum}; will stop after the current batch.")
+        if stop_event.is_set():
+            logger.warning(f"Received signal {signum} again. Force exiting...")
+            sys.exit(1)
+        logger.warning(f"Received signal {signum}; will stop after the current batch. (send again to force quit)")
         stop_event.set()
 
     signal.signal(signal.SIGINT, handle_interrupt)

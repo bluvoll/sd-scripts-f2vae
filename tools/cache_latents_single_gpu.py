@@ -366,10 +366,14 @@ def main():
     total_data_time = 0
     total_gpu_time = 0
     import signal
+    import sys
     stop_event = False
     def handle_interrupt(signum, frame):
         nonlocal stop_event
-        print(f"\nReceived signal {signum}. Stopping after current batch...")
+        if stop_event:
+            print(f"\nReceived signal {signum} again. Force exiting...")
+            sys.exit(1)
+        print(f"\nReceived signal {signum}. Stopping after current batch... (press Ctrl-C again to force quit)")
         stop_event = True
 
     signal.signal(signal.SIGINT, handle_interrupt)
