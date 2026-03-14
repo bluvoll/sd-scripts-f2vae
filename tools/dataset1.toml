@@ -5,6 +5,7 @@ bucket_no_upscale = true
 min_bucket_reso = 256
 max_bucket_reso = 4096
 bucket_reso_steps = 64
+latents_only = true
 
 [[datasets]]
     [[datasets.subsets]]

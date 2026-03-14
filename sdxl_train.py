@@ -795,6 +795,17 @@ def train(args):
     accelerator.print(f"  gradient accumulation steps / 勾配を合計するステップ数 = {args.gradient_accumulation_steps}")
     accelerator.print(f"  total optimization steps / 学習ステップ数: {args.max_train_steps}")
 
+    # Log latents_only subsets prominently right before training loop
+    latents_only_subsets = []
+    for ds in train_dataset_group.datasets:
+        for subset in ds.subsets:
+            if getattr(subset, "latents_only", False):
+                latents_only_subsets.append(subset.image_dir)
+    if latents_only_subsets:
+        accelerator.print("*** LATENTS-ONLY MODE: source images will NOT be loaded for the following subsets ***")
+        for d in latents_only_subsets:
+            accelerator.print(f"  - {d}")
+
     progress_bar = tqdm(range(args.max_train_steps), smoothing=0, disable=not accelerator.is_local_main_process, desc="steps")
     global_step = 0
 
