@@ -441,6 +441,7 @@ class DreamBoothSubset(BaseSubset):
         class_tokens: Optional[str],
         caption_extension: str,
         cache_info: bool,
+        latents_only: bool,
         alpha_mask: bool,
         num_repeats,
         shuffle_caption,
@@ -492,6 +493,7 @@ class DreamBoothSubset(BaseSubset):
         if self.caption_extension and not self.caption_extension.startswith("."):
             self.caption_extension = "." + self.caption_extension
         self.cache_info = cache_info
+        self.latents_only = latents_only
 
     def __eq__(self, other) -> bool:
         if not isinstance(other, DreamBoothSubset):
@@ -1670,6 +1672,40 @@ class DreamBoothDataset(BaseDataset):
                 logger.warning(f"not directory: {subset.image_dir}")
                 return [], [], []
 
+            # latents_only mode: discover .npz files, read sizes from them, skip image files entirely
+            if subset.latents_only:
+                logger.info(f"latents_only mode: discovering .npz files in {subset.image_dir}")
+                npz_results = glob_npz_latents(subset.image_dir)
+                if not npz_results:
+                    logger.warning(f"no valid .npz latent files found in {subset.image_dir}")
+                    return [], [], []
+
+                img_paths = [npz_path for npz_path, _ in npz_results]
+                sizes = [size for _, size in npz_results]
+                logger.info(f"found {len(img_paths)} cached latent files in {subset.image_dir}")
+
+                # read captions using the base name (strip .npz, look for .txt/.caption)
+                captions = []
+                missing_captions = []
+                for npz_path in img_paths:
+                    cap_for_img = read_caption(npz_path, subset.caption_extension, subset.enable_wildcard)
+                    if cap_for_img is None and subset.class_tokens is None:
+                        captions.append("")
+                        missing_captions.append(npz_path)
+                    elif cap_for_img is None:
+                        captions.append(subset.class_tokens)
+                        missing_captions.append(npz_path)
+                    else:
+                        captions.append(cap_for_img)
+
+                self.set_tag_frequency(os.path.basename(subset.image_dir), captions)
+                if missing_captions:
+                    logger.warning(
+                        f"No caption file found for {len(missing_captions)} latent entries. "
+                        f"class_tokens will be used if available."
+                    )
+                return img_paths, captions, sizes
+
             info_cache_file = os.path.join(subset.image_dir, self.IMAGE_INFO_CACHE_FILE)
             use_cached_info_for_subset = subset.cache_info
             if use_cached_info_for_subset:
@@ -1781,6 +1817,8 @@ class DreamBoothDataset(BaseDataset):
                 info = ImageInfo(img_path, subset.num_repeats, caption, subset.is_reg, img_path)
                 if size is not None:
                     info.image_size = size
+                if subset.latents_only:
+                    info.latents_npz = img_path  # path is already the .npz file
                 if subset.is_reg:
                     reg_infos.append((info, subset))
                 else:
@@ -2478,6 +2516,23 @@ def glob_images(directory, base="*"):
     img_paths = list(set(img_paths))  # 重複を排除
     img_paths.sort()
     return img_paths
+
+
+def glob_npz_latents(directory):
+    """Discover cached .npz latent files and extract image sizes from them."""
+    npz_paths = sorted(glob.glob(os.path.join(glob.escape(directory), "*.npz")))
+    results = []  # list of (npz_path, (width, height))
+    for npz_path in npz_paths:
+        try:
+            npz = np.load(npz_path)
+            if "latents" not in npz or "original_size" not in npz:
+                continue
+            original_size = npz["original_size"].tolist()  # [width, height]
+            results.append((npz_path, (int(original_size[0]), int(original_size[1]))))
+        except Exception as e:
+            logger.warning(f"skipping invalid npz file {npz_path}: {e}")
+            continue
+    return results
 
 
 def glob_images_pathlib(dir_path, recursive):

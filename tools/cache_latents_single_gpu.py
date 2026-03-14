@@ -62,7 +62,7 @@ def save_npz_async(file_path, latents, original_size, crop_ltrb, flipped_latents
         "crop_ltrb": np.array(crop_ltrb),
     }
     if flipped_latents is not None:
-        save_dict["flipped_latents"] = flipped_latents
+        save_dict["latents_flipped"] = flipped_latents
     if alpha_mask is not None:
         save_dict["alpha_mask"] = alpha_mask
     if latents_dtype is not None:
@@ -182,6 +182,10 @@ def main():
     for info in dataset_group.image_data.values():
          # Set npz path
          info.latents_npz = os.path.splitext(info.absolute_path)[0] + ".npz"
+         # latents_only entries already have their npz cached and no source image to encode
+         if info.absolute_path.endswith(".npz"):
+             skipped_count += 1
+             continue
          if args.skip_existing and os.path.exists(info.latents_npz):
              skipped_count += 1
              continue

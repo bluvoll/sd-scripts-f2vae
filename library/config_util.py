@@ -86,6 +86,7 @@ class DreamBoothSubsetParams(BaseSubsetParams):
     class_tokens: Optional[str] = None
     caption_extension: str = ".caption"
     cache_info: bool = False
+    latents_only: bool = False
     alpha_mask: bool = False
 
 
@@ -211,6 +212,7 @@ class ConfigSanitizer:
         "caption_extension": str,
         "class_tokens": str,
         "cache_info": bool,
+        "latents_only": bool,
     }
     DB_SUBSET_DISTINCT_SCHEMA = {
         Required("image_dir"): str,

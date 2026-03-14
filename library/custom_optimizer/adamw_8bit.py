@@ -3,6 +3,19 @@ import bitsandbytes
 import bitsandbytes.functional as F
 
 
+def _stochastic_round_bf16(fp32_tensor, out_bf16):
+    """Stochastically round fp32 to bf16 via bit manipulation.
+
+    bf16 shares fp32's 8-bit exponent, so truncating the lower 16 mantissa
+    bits is the only difference.  Adding uniform random bits in [0, 2^16)
+    before truncation gives an unbiased rounding whose expected value equals
+    the fp32 input, even when the true update is smaller than one bf16 ULP.
+    """
+    bits = fp32_tensor.view(torch.int32)
+    rand = torch.randint_like(bits, 0, 1 << 16)
+    out_bf16.copy_(((bits + rand) & ~0xFFFF).view(torch.float32))
+
+
 class AdamW8bitKahan(bitsandbytes.optim.AdamW8bit):
     def __init__(self, *args, stabilize=True, **kwargs):
         super().__init__(*args, **kwargs)
@@ -48,6 +61,21 @@ class AdamW8bitKahan(bitsandbytes.optim.AdamW8bit):
         else:
             lr = config['lr']
 
+        # --- Decoupled weight decay applied manually via shift buffer ---
+        # bitsandbytes optimizer_update_* would apply weight decay to `shift`
+        # (the Kahan compensation term, near zero) instead of `p` (the actual
+        # weight).  We pass weight_decay=0.0 to the kernel and apply it here.
+        wd = config["weight_decay"]
+        if wd > 0.0:
+            # shift -= lr * wd * p   (decoupled weight decay targeting true weight)
+            # Computed in fp32 to avoid sub-ULP loss, then stochastically rounded
+            # back to bf16 so the expected value is preserved across steps.
+            wd_update = p.data.float().mul_(lr * wd)
+            shift_fp32 = shift.float().sub_(wd_update)
+            if shift.dtype == torch.bfloat16:
+                _stochastic_round_bf16(shift_fp32, shift)
+            else:
+                shift.copy_(shift_fp32)
 
         if state["state1"].dtype == torch.float:
             F.optimizer_update_32bit(
@@ -63,7 +91,7 @@ class AdamW8bitKahan(bitsandbytes.optim.AdamW8bit):
                 config["betas"][1],
                 config["betas"][2] if len(config["betas"]) >= 3 else 0.0,
                 config["alpha"],
-                config["weight_decay"],
+                0.0,
                 gnorm_scale,
                 state["unorm_vec"] if config["max_unorm"] > 0.0 else None,
                 max_unorm=config["max_unorm"],
@@ -88,7 +116,7 @@ class AdamW8bitKahan(bitsandbytes.optim.AdamW8bit):
                 state["max2"],
                 state["new_max1"],
                 state["new_max2"],
-                config["weight_decay"],
+                0.0,
                 gnorm_scale=gnorm_scale,
                 unorm_vec=state["unorm_vec"] if config["max_unorm"] > 0.0 else None,
                 max_unorm=config["max_unorm"],
@@ -115,7 +143,7 @@ class AdamW8bitKahan(bitsandbytes.optim.AdamW8bit):
                 state["qmap2"],
                 state["absmax1"],
                 state["absmax2"],
-                config["weight_decay"],
+                0.0,
                 gnorm_scale=gnorm_scale,
                 skip_zeros=config["skip_zeros"],
             )
@@ -123,4 +151,3 @@ class AdamW8bitKahan(bitsandbytes.optim.AdamW8bit):
         buffer = p.clone()
         p.add_(shift)
         shift.add_(buffer.sub_(p))
-
