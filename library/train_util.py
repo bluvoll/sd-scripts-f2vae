@@ -2518,17 +2518,26 @@ def glob_images(directory, base="*"):
     return img_paths
 
 
-def glob_npz_latents(directory):
-    """Discover cached .npz latent files and extract image sizes from them."""
+def glob_npz_latents(directory, vae_spatial_factor=8):
+    """Discover cached .npz latent files and extract image sizes from them.
+
+    Uses the latent tensor dimensions × vae_spatial_factor as the image size.
+    This gives the actual bucket resolution that was used during caching,
+    ensuring consistent bucketing at training time (original_size is pre-crop
+    and can differ from the bucket reso).
+    """
     npz_paths = sorted(glob.glob(os.path.join(glob.escape(directory), "*.npz")))
     results = []  # list of (npz_path, (width, height))
     for npz_path in npz_paths:
         try:
             npz = np.load(npz_path)
-            if "latents" not in npz or "original_size" not in npz:
+            if "latents" not in npz:
                 continue
-            original_size = npz["original_size"].tolist()  # [width, height]
-            results.append((npz_path, (int(original_size[0]), int(original_size[1]))))
+            latents = npz["latents"]  # shape: [C, H, W]
+            # Derive pixel size from latent dimensions (matches the bucket reso used during caching)
+            pixel_w = int(latents.shape[2] * vae_spatial_factor)
+            pixel_h = int(latents.shape[1] * vae_spatial_factor)
+            results.append((npz_path, (pixel_w, pixel_h)))
         except Exception as e:
             logger.warning(f"skipping invalid npz file {npz_path}: {e}")
             continue
