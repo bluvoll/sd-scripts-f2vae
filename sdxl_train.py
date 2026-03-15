@@ -866,7 +866,7 @@ def train(args):
                 else:
                     with torch.no_grad():
                         # latentに変換
-                        latents = vae.encode(batch["images"].to(vae_dtype)).latent_dist.sample().to(weight_dtype)
+                        latents = vae.encode(batch["images"].to(vae_dtype)).latent_dist.mean.to(weight_dtype)
 
                         # NaNが含まれていれば警告を表示し0に置き換える
                         if torch.any(torch.isnan(latents)):

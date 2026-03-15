@@ -396,7 +396,7 @@ def main():
                 else:
                     dist = vae.encode(images).latent_dist
                 
-                latents = dist.sample()
+                latents = dist.mean
                 
                 if shift_factor != 0.0:
                     latents = latents - shift_factor

@@ -153,7 +153,7 @@ def cache_batch_latents_fast(
         # Custom VAE encoding retrieval (some VAEs return .latent, others .latent_dist)
         encoded = vae.encode(img_tensors)
         if hasattr(encoded, "latent_dist"):
-            latents = encoded.latent_dist.sample()
+            latents = encoded.latent_dist.mean
         else:
             latents = encoded.latent
 
@@ -161,7 +161,7 @@ def cache_batch_latents_fast(
             flipped_tensors = torch.flip(img_tensors, dims=[3])
             encoded_flipped = vae.encode(flipped_tensors)
             if hasattr(encoded_flipped, "latent_dist"):
-                flipped_latents = encoded_flipped.latent_dist.sample()
+                flipped_latents = encoded_flipped.latent_dist.mean
             else:
                 flipped_latents = encoded_flipped.latent
         else:

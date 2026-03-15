@@ -525,11 +525,11 @@ def cache_latents_custom(
 
         with torch.no_grad():
             encoded = vae.encode(img_tensors)
-            latents = encoded.latent_dist.sample().to("cpu")
+            latents = encoded.latent_dist.mean.to("cpu")
 
             if condition.flip_aug:
                 flipped_imgs = torch.flip(img_tensors, dims=[3])
-                flipped_latents = vae.encode(flipped_imgs).latent_dist.sample().to("cpu")
+                flipped_latents = vae.encode(flipped_imgs).latent_dist.mean.to("cpu")
             else:
                 flipped_latents = [None] * len(latents)
 
