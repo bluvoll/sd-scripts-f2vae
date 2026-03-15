@@ -2518,6 +2518,24 @@ def glob_images(directory, base="*"):
     return img_paths
 
 
+def _read_npz_array_shape(npz_path, array_name="latents"):
+    """Read only the shape of a named array from an .npz file without loading data."""
+    import zipfile
+    import numpy.lib.format as npy_format
+
+    with zipfile.ZipFile(npz_path, "r") as zf:
+        entry_name = array_name + ".npy"
+        if entry_name not in zf.namelist():
+            return None
+        with zf.open(entry_name) as f:
+            version = npy_format.read_magic(f)
+            if version == (1, 0):
+                shape, _, _ = npy_format.read_array_header_1_0(f)
+            else:
+                shape, _, _ = npy_format.read_array_header_2_0(f)
+            return shape
+
+
 def glob_npz_latents(directory, vae_spatial_factor=8):
     """Discover cached .npz latent files and extract image sizes from them.
 
@@ -2525,18 +2543,20 @@ def glob_npz_latents(directory, vae_spatial_factor=8):
     This gives the actual bucket resolution that was used during caching,
     ensuring consistent bucketing at training time (original_size is pre-crop
     and can differ from the bucket reso).
+
+    Only reads the npy header (shape) from each .npz — does not load array data,
+    so this is fast even for millions of files.
     """
     npz_paths = sorted(glob.glob(os.path.join(glob.escape(directory), "*.npz")))
     results = []  # list of (npz_path, (width, height))
     for npz_path in npz_paths:
         try:
-            npz = np.load(npz_path)
-            if "latents" not in npz:
+            shape = _read_npz_array_shape(npz_path, "latents")
+            if shape is None or len(shape) != 3:
                 continue
-            latents = npz["latents"]  # shape: [C, H, W]
-            # Derive pixel size from latent dimensions (matches the bucket reso used during caching)
-            pixel_w = int(latents.shape[2] * vae_spatial_factor)
-            pixel_h = int(latents.shape[1] * vae_spatial_factor)
+            # shape is (C, H, W) — derive pixel size from spatial dims
+            pixel_w = int(shape[2] * vae_spatial_factor)
+            pixel_h = int(shape[1] * vae_spatial_factor)
             results.append((npz_path, (pixel_w, pixel_h)))
         except Exception as e:
             logger.warning(f"skipping invalid npz file {npz_path}: {e}")
