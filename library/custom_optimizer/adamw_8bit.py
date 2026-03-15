@@ -61,22 +61,6 @@ class AdamW8bitKahan(bitsandbytes.optim.AdamW8bit):
         else:
             lr = config['lr']
 
-        # --- Decoupled weight decay applied manually via shift buffer ---
-        # bitsandbytes optimizer_update_* would apply weight decay to `shift`
-        # (the Kahan compensation term, near zero) instead of `p` (the actual
-        # weight).  We pass weight_decay=0.0 to the kernel and apply it here.
-        wd = config["weight_decay"]
-        if wd > 0.0:
-            # shift -= lr * wd * p   (decoupled weight decay targeting true weight)
-            # Computed in fp32 to avoid sub-ULP loss, then stochastically rounded
-            # back to bf16 so the expected value is preserved across steps.
-            wd_update = p.data.float().mul_(lr * wd)
-            shift_fp32 = shift.float().sub_(wd_update)
-            if shift.dtype == torch.bfloat16:
-                _stochastic_round_bf16(shift_fp32, shift)
-            else:
-                shift.copy_(shift_fp32)
-
         if state["state1"].dtype == torch.float:
             F.optimizer_update_32bit(
                 self.optimizer_name,
@@ -147,6 +131,24 @@ class AdamW8bitKahan(bitsandbytes.optim.AdamW8bit):
                 gnorm_scale=gnorm_scale,
                 skip_zeros=config["skip_zeros"],
             )
+
+        # --- Decoupled weight decay applied manually via shift buffer ---
+        # bitsandbytes optimizer_update_* would apply weight decay to `shift`
+        # (the Kahan compensation term, near zero) instead of `p` (the actual
+        # weight).  We pass weight_decay=0.0 to the kernel and apply it here,
+        # AFTER the kernel, so the kernel's nearest rounding can't overwrite
+        # our stochastic rounding.
+        wd = config["weight_decay"]
+        if wd > 0.0:
+            # shift -= lr * wd * p   (decoupled weight decay targeting true weight)
+            # Computed in fp32 to avoid sub-ULP loss, then stochastically rounded
+            # back to bf16 so the expected value is preserved across steps.
+            wd_update = p.data.float().mul_(lr * wd)
+            shift_fp32 = shift.float().sub_(wd_update)
+            if shift.dtype == torch.bfloat16:
+                _stochastic_round_bf16(shift_fp32, shift)
+            else:
+                shift.copy_(shift_fp32)
 
         buffer = p.clone()
         p.add_(shift)
