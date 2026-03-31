@@ -231,6 +231,7 @@ def load_models_from_sdxl_checkpoint(model_version, ckpt_path, map_location, dty
         projection_dim=768,
         # torch_dtype="float32",
         # transformers_version="4.25.0.dev0",
+        attn_implementation="eager",
     )
     with init_empty_weights():
         text_model1 = CLIPTextModel._from_config(text_model1_cfg)
@@ -257,6 +258,7 @@ def load_models_from_sdxl_checkpoint(model_version, ckpt_path, map_location, dty
         projection_dim=1280,
         # torch_dtype="float32",
         # transformers_version="4.25.0.dev0",
+        attn_implementation="eager",
     )
     with init_empty_weights():
         text_model2 = CLIPTextModelWithProjection(text_model2_cfg)

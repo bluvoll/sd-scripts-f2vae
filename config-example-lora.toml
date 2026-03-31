@@ -1,20 +1,20 @@
 [additional_network_arguments]
-learning_rate      = 3.5e-5 #2.5e-5 general.
-train_text_encoder = false
-text_encoder_lr    = 5e-5
+unet_lr = 0.0005
+network_module = "lycoris.kohya"
+network_args = ["conv_dim=32", "conv_alpha=32.0", "algo=locon", "train_norm=True"]
 
 
 [optimizer_arguments]
 lr_scheduler       = "rex"
-optimizer_type     = "Adopt_adv"
-optimizer_args     = ["weight_decay=0.01","use_atan2=True", "cautious_mask=True", "stochastic_rounding=True","nnmf_factor=True","vector_reshape=True","cautious_wd=True" ]
+optimizer_type     = "AdamW8Kahan"
+optimizer_args     = ["weight_decay=0.01"]
 min_lr             = 0
 
 [training_arguments]
 max_train_epochs    = 50
 #protected_tags_file = "cleaned.txt"
 loss_type          = "l2"
-save_every_n_epochs = 5 
+save_every_n_epochs = 5
 save_last_n_epochs  = 10
 train_batch_size   = 16
 max_grad_norm      = 1
@@ -27,12 +27,12 @@ persistent_data_loader_workers = true
 save_precision     = "bf16"
 mixed_precision    = "bf16"
 full_bf16          = true
-output_dir         = "full-epochs"
-output_name        = "test-aesthetic-noAI"
+output_dir         = "Output-Folder"
+output_name        = "Test"
 
 
 [model_arguments]
-pretrained_model_name_or_path = "Wheres-my-name-e1-to-e3-000001.safetensors"
+pretrained_model_name_or_path = "Mugen.safetensors"
 vae="tools/black-forest-labs/FLUX.2-dev" #OwO
 v2                    = false
 sdxl                  = true

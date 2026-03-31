@@ -10,6 +10,11 @@ import toml
 from tqdm import tqdm
 
 import torch
+
+# Disable cuDNN SDPA backend — broken on some H100 clusters with certain cuDNN versions.
+# Falls back to Flash Attention or math backend.
+#torch.backends.cuda.enable_cudnn_sdp(False)
+
 from library.device_utils import init_ipex, clean_memory_on_device
 
 
