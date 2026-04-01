@@ -1,0 +1,46 @@
+[optimizer_arguments]
+lr_scheduler       = "rex"
+optimizer_type     = "Adopt_adv"
+optimizer_args     = ["weight_decay=0.01", "use_atan2=True", "cautious_mask=True", "stochastic_rounding=True", "nnmf_factor=True", "vector_reshape=True", "cautious_wd=True"]
+min_lr             = 0
+
+[training_arguments]
+learning_rate       = 1e-6
+max_train_epochs    = 10
+loss_type           = "l2"
+save_every_n_epochs = 1
+save_last_n_epochs  = 10
+train_batch_size    = 16
+max_grad_norm       = 1
+weighted_captions   = false
+seed                = 21463286
+max_token_length    = 225
+lowram              = false
+max_data_loader_n_workers = 8
+persistent_data_loader_workers = true
+# TF32 is enabled by default in train_sd15.py — no mixed precision needed.
+# This avoids FP16 loss scaling headaches and BF16 quality issues on SD 1.5.
+save_precision      = "fp32"
+mixed_precision     = "no"
+output_dir          = "sd15-epochs"
+output_name         = "animefull-finetuned"
+
+[model_arguments]
+pretrained_model_name_or_path = "/home/bluvoll/ComfyUI/models/checkpoints/animefull-final-pruned-fp16.safetensors"
+# No external VAE — using the one bundled in the checkpoint
+v2                     = false
+gradient_checkpointing = true
+gradient_accumulation_steps = 2
+sdpa                   = true
+xformers               = false
+logging_dir ="logs"
+log_with = "wandb"
+wandb_run_name = "RF-Test-SD1.5"
+
+[saving_arguments]
+save_model_as = "safetensors"
+
+[dataset_arguments]
+cache_latents         = true
+cache_latents_to_disk = true
+lr_warmup_steps       = 160

@@ -1,0 +1,33 @@
+[general]
+resolution = 512
+enable_bucket = true
+bucket_no_upscale = true
+min_bucket_reso = 256
+max_bucket_reso = 1280
+bucket_reso_steps = 64
+
+[[datasets]]
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir  = "/home/bluvoll/anima-pain/0000/"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir  = "/home/bluvoll/anima-pain/0001/"
+num_repeats = 1
+shuffle_caption = true
+
+[[datasets.subsets]]
+caption_dropout_rate = 0.1
+caption_tag_dropout_rate = 0.1
+caption_extension = ".txt"
+image_dir  = "/home/bluvoll/anima-pain/0002/"
+num_repeats = 1
+shuffle_caption = true
