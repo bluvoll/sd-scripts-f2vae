@@ -3,7 +3,7 @@
 SDXL-based models ([NoobAI-XL](https://civitai.com/models/833294?modelVersionId=1190596)) converted to Rectified flow / RF and more:
 - Mugen | RF + Flux 2 VAE conversion – [CivitAI](https://civitai.com/models/2237480) / [🤗-Link](https://huggingface.co/CabalResearch/Mugen)
   - no support on Machina's sd-scripts because no Flux2 VAE support (yet?) 
-- ChenkinRF | RF only, default SDXL VAE | [CivitAI](https://civitai.com/models/2363696/chenkinnoob-xl-rectified-flow) / [🤗-Link](https://huggingface.co/ChenkinRF/ChenkinNoob-XL-v0.3-Rectified-Flow)
+- ChenkinRF | RF only, default SDXL VAE – [CivitAI](https://civitai.com/models/2363696/chenkinnoob-xl-rectified-flow) / [🤗-Link](https://huggingface.co/ChenkinRF/ChenkinNoob-XL-v0.3-Rectified-Flow)
   - compatible with Machina's sd-scripts and other trainers supporting RF objective for SDXL
 - Shitty experiment | RF + Anzhc's EQ-VAE – [CivitAI](https://civitai.com/models/2071356/experimental-noobai-with-rectified-flow-eq-vae)
   - compatible with Machina's sd-scripts and other trainers supporting RF objective for SDXL as well as VAE reflection (optional but will improve image border edges)
