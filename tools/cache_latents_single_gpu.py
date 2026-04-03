@@ -37,12 +37,12 @@ def setup_parser():
     # Legacy args for compatibility with config files
     # resolution and bucket args are added by train_util.add_dataset_arguments
     
-    parser.add_argument("--mixed_precision", type=str, default="bf16") # Used for weight_dtype
+    parser.add_argument("--mixed_precision", type=str, default="fp16") # Used for weight_dtype
     parser.add_argument("--full_bf16", action="store_true")
     parser.add_argument(
         "--save_precision",
         type=str,
-        default="auto",
+        default="float16",
         choices=["auto", "float32", "float16", "bfloat16"],
         help="Precision used when writing latents to disk. `auto` stores fp16 for half/bfloat16 inference, otherwise fp32. `bfloat16` stores compact uint16 payload plus dtype tag."
     )
@@ -86,7 +86,7 @@ def main():
     elif args.mixed_precision == "bf16":
         weight_dtype = torch.bfloat16
         
-    vae_dtype = torch.float32 if args.no_half_vae else weight_dtype
+    vae_dtype = torch.float32 if args.no_half_vae or device.type == "cpu" else weight_dtype
 
     if args.save_precision == "float16":
         save_mode = "float16"
@@ -391,12 +391,7 @@ def main():
             images = images.to(device, non_blocking=True).to(vae_dtype, memory_format=torch.channels_last)
             
             with autocast_ctx:
-                if hasattr(vae, "encode"):
-                    dist = vae.encode(images).latent_dist
-                else:
-                    dist = vae.encode(images).latent_dist
-                
-                latents = dist.mean
+                latents = train_util.get_vae_latents(vae, images)
                 
                 if shift_factor != 0.0:
                     latents = latents - shift_factor

@@ -1069,14 +1069,14 @@ class NetworkTrainer:
                         if args.vae_batch_size is None or len(batch["images"]) <= args.vae_batch_size:
                             with torch.no_grad():
                                 # latentに変換
-                                latents = vae.encode(batch["images"].to(dtype=vae_dtype)).latent_dist.sample().to(dtype=weight_dtype)
+                                latents = train_util.get_vae_latents(vae, batch["images"].to(dtype=vae_dtype)).to(dtype=weight_dtype)
                         else:
                             chunks = [batch["images"][i:i + args.vae_batch_size] for i in range(0, len(batch["images"]), args.vae_batch_size)]
                             list_latents = []
                             for chunk in chunks:
                                 with torch.no_grad():
                                 # latentに変換
-                                    list_latents.append(vae.encode(chunk.to(dtype=vae_dtype)).latent_dist.sample().to(dtype=weight_dtype))
+                                    list_latents.append(train_util.get_vae_latents(vae, chunk.to(dtype=vae_dtype)).to(dtype=weight_dtype))
                             latents = torch.cat(list_latents, dim=0)
                             # NaNが含まれていれば警告を表示し0に置き換える
                         if torch.any(torch.isnan(latents)):

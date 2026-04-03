@@ -2403,15 +2403,64 @@ def load_latents_from_disk(
     return latents, original_size, crop_ltrb, flipped_latents, alpha_mask
 
 
-def save_latents_to_disk(npz_path, latents_tensor, original_size, crop_ltrb, flipped_latents_tensor=None, alpha_mask=None):
+def get_vae_latents(vae, img_tensors, sample: bool = False):
+    encoded = vae.encode(img_tensors)
+
+    if hasattr(encoded, "latent_dist") and encoded.latent_dist is not None:
+        return encoded.latent_dist.sample() if sample else encoded.latent_dist.mean
+
+    if hasattr(encoded, "latent"):
+        return encoded.latent
+
+    if hasattr(encoded, "latents"):
+        return encoded.latents
+
+    if isinstance(encoded, (tuple, list)) and len(encoded) > 0:
+        return encoded[0]
+
+    raise AttributeError("Unsupported VAE encode output: expected latent_dist, latent, latents, or tuple output.")
+
+
+def save_latents_to_disk(
+    npz_path,
+    latents_tensor,
+    original_size,
+    crop_ltrb,
+    flipped_latents_tensor=None,
+    alpha_mask=None,
+    save_mode: Optional[str] = None,
+):
     kwargs = {}
-    if flipped_latents_tensor is not None:
-        kwargs["latents_flipped"] = flipped_latents_tensor.float().cpu().numpy()
+
+    if save_mode is None:
+        save_mode = "float32"
+
+    latents_dtype_tag = save_mode
+    if save_mode == "bfloat16":
+        latents_array = latents_tensor.to(dtype=torch.bfloat16).cpu().view(torch.uint16).numpy()
+        flipped_array = (
+            flipped_latents_tensor.to(dtype=torch.bfloat16).cpu().view(torch.uint16).numpy()
+            if flipped_latents_tensor is not None
+            else None
+        )
+    else:
+        target_torch_dtype = torch.float16 if save_mode == "float16" else torch.float32
+        target_np_dtype = np.float16 if save_mode == "float16" else np.float32
+        latents_array = latents_tensor.to(dtype=target_torch_dtype).cpu().numpy().astype(target_np_dtype, copy=False)
+        flipped_array = (
+            flipped_latents_tensor.to(dtype=target_torch_dtype).cpu().numpy().astype(target_np_dtype, copy=False)
+            if flipped_latents_tensor is not None
+            else None
+        )
+
+    if flipped_array is not None:
+        kwargs["latents_flipped"] = flipped_array
     if alpha_mask is not None:
         kwargs["alpha_mask"] = alpha_mask.float().cpu().numpy()
+    kwargs["latents_dtype"] = np.array(latents_dtype_tag)
     np.savez(
         npz_path,
-        latents=latents_tensor.float().cpu().numpy(),
+        latents=latents_array,
         original_size=np.array(original_size),
         crop_ltrb=np.array(crop_ltrb),
         **kwargs,
@@ -2747,12 +2796,12 @@ def cache_batch_latents(
     img_tensors = img_tensors.to(device=vae.device, dtype=vae.dtype)
 
     with torch.no_grad():
-        latents = vae.encode(img_tensors).latent_dist.mean.to("cpu")
+        latents = get_vae_latents(vae, img_tensors).to("cpu")
 
     if flip_aug:
         img_tensors = torch.flip(img_tensors, dims=[3])
         with torch.no_grad():
-            flipped_latents = vae.encode(img_tensors).latent_dist.mean.to("cpu")
+            flipped_latents = get_vae_latents(vae, img_tensors).to("cpu")
     else:
         flipped_latents = [None] * len(latents)
 

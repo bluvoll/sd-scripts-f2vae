@@ -3,7 +3,7 @@ import torch
 import numpy as np
 from torch import nn
 from diffusers import AutoencoderKL, AutoencoderDC, AutoencoderKLFlux2
-from library import model_util
+from library import model_util, train_util
 from tqdm import tqdm
 from PIL import Image
 import cv2
@@ -417,6 +417,15 @@ def cache_latents_custom(
     Custom latent caching loop supporting Flux/Sana/Custom VAEs.
     Matches the standard cache format (latents + metadata) so loaders work.
     """
+    device = accelerator.device
+    if getattr(args, "no_half_vae", False) or device.type == "cpu":
+        cache_vae_dtype = torch.float32
+        latent_save_mode = "float32"
+    else:
+        mixed_precision = getattr(args, "mixed_precision", "no")
+        cache_vae_dtype = torch.bfloat16 if mixed_precision == "bf16" else torch.float16
+        latent_save_mode = "float16"
+
     image_infos = list(dataset_group.image_data.values())
     if not image_infos:
         print("No images to cache.")
@@ -453,7 +462,8 @@ def cache_latents_custom(
 
     print(
         f"[Custom Latents Cache] Caching latents for {len(images_to_process)} images "
-        f"(Skipped {len(image_infos) - len(images_to_process)}). VAE Type: {vae_type}"
+        f"(Skipped {len(image_infos) - len(images_to_process)}). VAE Type: {vae_type}. "
+        f"Cache VAE dtype: {cache_vae_dtype}, save mode: {latent_save_mode}"
     )
 
     # Group by resolution/augment settings like the standard cache path
@@ -494,7 +504,7 @@ def cache_latents_custom(
         batches.append((current_condition, batch))
 
     vae.eval()
-    vae.to(accelerator.device, dtype=torch.float32 if args.no_half_vae else vae.dtype)
+    vae.to(device, dtype=cache_vae_dtype)
 
     for condition, batch_infos in tqdm(batches, desc="Caching Custom Latents"):
         images = []
@@ -524,12 +534,11 @@ def cache_latents_custom(
         img_tensors = torch.stack(images, dim=0).to(device=vae.device, dtype=vae.dtype)
 
         with torch.no_grad():
-            encoded = vae.encode(img_tensors)
-            latents = encoded.latent_dist.mean.to("cpu")
+            latents = train_util.get_vae_latents(vae, img_tensors).to("cpu")
 
             if condition.flip_aug:
                 flipped_imgs = torch.flip(img_tensors, dims=[3])
-                flipped_latents = vae.encode(flipped_imgs).latent_dist.mean.to("cpu")
+                flipped_latents = train_util.get_vae_latents(vae, flipped_imgs).to("cpu")
             else:
                 flipped_latents = [None] * len(latents)
 
@@ -541,10 +550,12 @@ def cache_latents_custom(
                 info.latents_crop_ltrb,
                 flipped_latent,
                 alpha_mask,
+                save_mode=latent_save_mode,
             )
 
     vae.to("cpu")
-    torch.cuda.empty_cache()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
 
 
 def get_vae_scale_and_shift(vae_type):
