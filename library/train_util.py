@@ -2729,7 +2729,11 @@ def trim_and_resize_if_required(
     if image_width != resized_size[0] or image_height != resized_size[1]:
         # リサイズする
         if image_width > resized_size[0] and image_height > resized_size[1]:
-            image = cv2.resize(image, resized_size, interpolation=cv2.INTER_AREA)  # INTER_AREAでやりたいのでcv2でリサイズ
+           
+            if random.random() < 0.65: # Nice balance between INTER_AREA and Lanczos. Only using INTER_AREA results in higher resolution input images being associated with smoothing of details. Using Lanczos mitigates this.
+                image = cv2.resize(image, resized_size, interpolation=cv2.INTER_AREA)  # INTER_AREAでやりたいのでcv2でリサイズ
+            else:
+                image = pil_resize(image,resized_size, interpolation=Image.Resampling.LANCZOS) # Use PIL LANCZOS over cv2's
         else:
             image = pil_resize(image, resized_size)
 

@@ -61,7 +61,7 @@ except Exception:
 
 setup_logging()
 import logging
-
+from library.jina_adapter_code.JinaCLIPAdapterWrapper import JinaAndAdapter, load_jina_and_adapter, get_llm_text_conditioning
 logger = logging.getLogger(__name__)
 
 
@@ -279,8 +279,15 @@ class NetworkTrainer:
         set_seed(args.seed)
 
         # tokenizerは単体またはリスト、tokenizersは必ずリスト：既存のコードとの互換性のため
-        tokenizer = self.load_tokenizer(args)
-        tokenizers = tokenizer if isinstance(tokenizer, list) else [tokenizer]
+        if args.adapter_jina:
+                train_text_encoder_1 = self.is_train_text_encoder(args)
+                logger.info("Loading Jina-clip-v2 and adapter.")
+                a_text_encoder = load_jina_and_adapter(args, train_text_encoder_1)
+                tokenizer = a_text_encoder.tokenizer
+                tokenizers = tokenizer if isinstance(tokenizer, list) else [tokenizer]
+        else:
+            tokenizer = self.load_tokenizer(args)
+            tokenizers = tokenizer if isinstance(tokenizer, list) else [tokenizer]
 
         # データセットを準備する
         if args.dataset_class is None:
@@ -373,6 +380,11 @@ class NetworkTrainer:
 
         # モデルを読み込む
         model_version, text_encoder, vae, unet = self.load_target_model(args, weight_dtype, accelerator)
+        if args.adapter_jina:
+            text_encoder = a_text_encoder
+            text_encoder = [text_encoder] if text_encoder is not None else []
+            logger.info(f"Using Jina adapter")
+            
         if getattr(args, "vae_reflection_padding", False):
             vae = model_util.use_reflection_padding(vae)
 
@@ -398,9 +410,11 @@ class NetworkTrainer:
                     multiplier = args.base_weights_multiplier[i]
 
                 accelerator.print(f"merging module: {weight_path} with multiplier {multiplier}")
-
+                lora_target_text_encoder = text_encoder
+                if args.use_llm_as_text_encoder:
+                    lora_target_text_encoder = text_encoders[0].llm_adapter
                 module, weights_sd = network_module.create_network_from_weights(
-                    multiplier, weight_path, vae, text_encoder, unet, for_inference=True
+                    multiplier, weight_path, vae, lora_target_text_encoder, unet, for_inference=True
                 )
                 module.merge_to(text_encoder, unet, weights_sd, weight_dtype, accelerator.device if args.lowram else "cpu")
 
@@ -460,7 +474,10 @@ class NetworkTrainer:
 
         train_unet = not args.network_train_text_encoder_only
         train_text_encoder = self.is_train_text_encoder(args)
-        network.apply_to(text_encoder, unet, train_text_encoder, train_unet)
+        if args.adapter_jina:
+            network.apply_to(text_encoder[0].llm_adapter, unet, train_text_encoder, train_unet)
+        else:
+            network.apply_to(text_encoder, unet, train_text_encoder, train_unet)
 
         if args.network_weights is not None:
             # FIXME consider alpha of weights
@@ -470,8 +487,11 @@ class NetworkTrainer:
         if args.gradient_checkpointing:
             unet.enable_gradient_checkpointing()
             for t_enc in text_encoders:
-                t_enc.gradient_checkpointing_enable()
-            del t_enc
+                if args.use_llm_as_text_encoder:
+                    pass
+                else:
+                    t_enc.gradient_checkpointing_enable()
+                del t_enc
             network.enable_gradient_checkpointing()  # may have no effect
 
         # 学習に必要なクラスを準備する
@@ -562,13 +582,16 @@ class NetworkTrainer:
         unet.requires_grad_(False)
         unet.to(dtype=unet_weight_dtype)
         for t_enc in text_encoders:
-            t_enc.requires_grad_(False)
+            if args.use_llm_as_text_encoder:
+                pass
+            else:
+                t_enc.requires_grad_(False)
 
-            # in case of cpu, dtype is already set to fp32 because cpu does not support fp8/fp16/bf16
-            if t_enc.device.type != "cpu":
-                t_enc.to(dtype=te_weight_dtype)
-                # nn.Embedding not support FP8
-                t_enc.text_model.embeddings.to(dtype=(weight_dtype if te_weight_dtype != weight_dtype else te_weight_dtype))
+                # in case of cpu, dtype is already set to fp32 because cpu does not support fp8/fp16/bf16
+                if t_enc.device.type != "cpu":
+                    t_enc.to(dtype=te_weight_dtype)
+                    # nn.Embedding not support FP8
+                    t_enc.text_model.embeddings.to(dtype=(weight_dtype if te_weight_dtype != weight_dtype else te_weight_dtype))
 
         # acceleratorがなんかよろしくやってくれるらしい / accelerator will do something good
         if args.deepspeed:
@@ -606,16 +629,21 @@ class NetworkTrainer:
             # according to TI example in Diffusers, train is required
             unet.train()
             for t_enc in text_encoders:
-                t_enc.train()
+                if args.use_llm_as_text_encoder:
+                    pass 
+                else:
+                    t_enc.train() # make sure network_train_unet is on or something
 
                 # set top parameter requires_grad = True for gradient checkpointing works
                 if train_text_encoder:
                     t_enc.text_model.embeddings.requires_grad_(True)
-
         else:
             unet.eval()
             for t_enc in text_encoders:
-                t_enc.eval()
+                if args.use_llm_as_text_encoder:
+                    t_enc.llm_adapter.eval()
+                else:
+                    t_enc.eval()
 
         del t_enc
 
@@ -1099,19 +1127,26 @@ class NetworkTrainer:
 
                     with torch.set_grad_enabled(train_text_encoder), accelerator.autocast():
                         # Get the text embedding for conditioning
-                        if args.weighted_captions:
-                            text_encoder_conds = get_weighted_text_embeddings(
-                                tokenizer,
-                                text_encoder,
-                                batch["captions"],
-                                accelerator.device,
-                                args.max_token_length // 75 if args.max_token_length else 1,
-                                clip_skip=args.clip_skip,
-                            )
+                        if args.use_llm_as_text_encoder:
+                            text_encoder_conds = get_llm_text_conditioning(
+                                    args, batch, text_encoders[0],tokenizers[0],accelerator, weight_dtype
+                                )
+                            prompt_embeds_t = text_encoder_conds["prompt_embeds"]
+                            pooled_prompt_embeds_t = text_encoder_conds["pooled_prompt_embeds"]
                         else:
-                            text_encoder_conds = self.get_text_cond(
-                                args, accelerator, batch, tokenizers, text_encoders, weight_dtype
-                            )
+                            if args.weighted_captions:
+                                text_encoder_conds = get_weighted_text_embeddings(
+                                    tokenizer,
+                                    text_encoder,
+                                    batch["captions"],
+                                    accelerator.device,
+                                    args.max_token_length // 75 if args.max_token_length else 1,
+                                    clip_skip=args.clip_skip,
+                                )
+                            else:
+                                text_encoder_conds = self.get_text_cond(
+                                    args, accelerator, batch, tokenizers, text_encoders, weight_dtype
+                                )
 
                     pixel_counts = self.get_flow_pixel_counts(args, batch, latents)
 
@@ -1123,9 +1158,12 @@ class NetworkTrainer:
                     if args.gradient_checkpointing:
                         for x in noisy_latents:
                             x.requires_grad_(True)
-                        for t in text_encoder_conds:
-                            t.requires_grad_(True)
-
+                        if args.use_llm_as_text_encoder:
+                                prompt_embeds_t.requires_grad_(True)
+                                pooled_prompt_embeds_t.requires_grad_(True)
+                        else:
+                            for t in text_encoder_conds:
+                                t.requires_grad_(True)
                     # Predict the noise residual
                     with accelerator.autocast():
                         noise_pred = self.call_unet(
@@ -1587,6 +1625,30 @@ def setup_parser() -> argparse.ArgumentParser:
         default=False,
         help="For full caption dropout, use zero conditioning instead of empty caption"
     )
+    # Jina adapter 
+    parser.add_argument(
+        "--use_llm_as_text_encoder",
+        action="store_true",
+        help="Use LLM as a text encoder with an adapter.",
+    )
+    parser.add_argument(
+        "--adapter_jina",
+        action="store_true",
+        help="Using Jina clip v2 Adapter",
+    )
+    parser.add_argument(
+        "--llm_model_path",
+        type=str,
+        default=None,
+        help="Path to the LLM model for the text encoder.",
+    )
+    parser.add_argument(
+        "--llm_adapter_path",
+        type=str,
+        default=None,
+        help="Path to the LLM Adapter for the text encoder.",
+    )
+    
     # parser.add_argument("--loraplus_lr_ratio", default=None, type=float, help="LoRA+ learning rate ratio")
     # parser.add_argument("--loraplus_unet_lr_ratio", default=None, type=float, help="LoRA+ UNet learning rate ratio")
     # parser.add_argument("--loraplus_text_encoder_lr_ratio", default=None, type=float, help="LoRA+ text encoder learning rate ratio")
