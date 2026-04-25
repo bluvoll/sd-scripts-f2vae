@@ -12,8 +12,8 @@ from safetensors.torch import load_file
 import logging
 logger = logging.getLogger(__name__)
 
-from jina_clip_v2_states import JinaStates
-from jina_to_sdxl_adapter_v2 import JinaToSDXLAdapterV2
+from .jina_clip_v2_states import JinaStates
+from .jina_to_sdxl_adapter_v2 import JinaToSDXLAdapterV2
 
 class JinaAndAdapter(torch.nn.Module):
     """
