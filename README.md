@@ -9,10 +9,6 @@ Arguments added:
   
   --llm_adapter_path [Path to Jina-clip-v2 adapter]
 
-Additional Information:
-Currently only support Lora training for the UNET and not the adapter. This should be fine for 99% of cases. Consider passing `--network_train_unet_only`.
-
-If you want to train a lora for Mugen using the Jina-clip-v2 adapter, you should use this version of [Mugen](https://huggingface.co/TheRemixer/jina-clip-v2-adapter/blob/main/MugenJinaUNET.safetensors)
 ### What for?
 
 SDXL-based models ([NoobAI-XL](https://civitai.com/models/833294?modelVersionId=1190596)) converted to Rectified flow / RF and more:
