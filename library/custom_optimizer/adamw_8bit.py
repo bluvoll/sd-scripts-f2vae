@@ -17,14 +17,19 @@ def _stochastic_round_bf16(fp32_tensor, out_bf16):
 
 
 class AdamW8bitKahan(bitsandbytes.optim.AdamW8bit):
-    def __init__(self, *args, stabilize=True, **kwargs):
+    def __init__(self, *args, stabilize=False, force_kahan_buffer_fp32=False, **kwargs):
         super().__init__(*args, **kwargs)
         self.stabilize = stabilize
-
+        self.force_kahan_buffer_fp32 = force_kahan_buffer_fp32
     @torch.no_grad()
     def init_state(self, group, p, gindex, pindex):
         super().init_state(group, p, gindex, pindex)
-        self.state[p]['shift'] = self.get_state_buffer(p, dtype=p.dtype)
+        kahan_buffer_dtype = p.dtype
+        
+        if self.force_kahan_buffer_fp32:
+            kahan_buffer_dtype = torch.float32
+
+        self.state[p]['shift'] = self.get_state_buffer(p, dtype=kahan_buffer_dtype) 
 
     @torch.no_grad()
     def update_step(self, group, p, gindex, pindex):
@@ -52,15 +57,19 @@ class AdamW8bitKahan(bitsandbytes.optim.AdamW8bit):
 
         shift = state['shift']
 
+        if shift.dtype == torch.float32:
+            grad = grad.float()
+
         # StableAdamW
         if self.stabilize:
+            # Broken and shouldn't be used
             exp_avg_sq = state['state2']
             eps_sq = torch.tensor(config['eps']**2, dtype=exp_avg_sq.dtype, device=exp_avg_sq.device)
             rms = grad.pow(2).div_(exp_avg_sq.maximum(eps_sq)).mean().sqrt()
             lr = config['lr'] / max(1, rms.item())
         else:
             lr = config['lr']
-
+            
         if state["state1"].dtype == torch.float:
             F.optimizer_update_32bit(
                 self.optimizer_name,
