@@ -108,6 +108,28 @@ def load_custom_sdxl_checkpoint(ckpt_path, map_location, dtype=None, custom_vae_
         unet = patch_unet_for_latent_channels(unet, target_channels)
     
     # 6. Load Text Encoders (Standard SDXL logic)
+    print("building text encoders")
+    # TE1
+    text_model1_cfg = CLIPTextConfig(
+        vocab_size=49408, hidden_size=768, intermediate_size=3072, num_hidden_layers=12, num_attention_heads=12,
+        max_position_embeddings=77, hidden_act="quick_gelu", layer_norm_eps=1e-05, dropout=0.0, attention_dropout=0.0,
+        initializer_range=0.02, initializer_factor=1.0, pad_token_id=1, bos_token_id=0, eos_token_id=2,
+        model_type="clip_text_model", projection_dim=768
+    )
+    with init_empty_weights():
+        text_model1 = CLIPTextModel._from_config(text_model1_cfg)
+    
+    # TE2
+    text_model2_cfg = CLIPTextConfig(
+        vocab_size=49408, hidden_size=1280, intermediate_size=5120, num_hidden_layers=32, num_attention_heads=20,
+        max_position_embeddings=77, hidden_act="gelu", layer_norm_eps=1e-05, dropout=0.0, attention_dropout=0.0,
+        initializer_range=0.02, initializer_factor=1.0, pad_token_id=1, bos_token_id=0, eos_token_id=2,
+        model_type="clip_text_model", projection_dim=1280
+    )
+    with init_empty_weights():
+        text_model2 = CLIPTextModelWithProjection(text_model2_cfg)
+
+    print("loading text encoders from checkpoint")
     te1_sd = {}
     te2_sd = {}
     for k in list(state_dict.keys()):
@@ -115,59 +137,13 @@ def load_custom_sdxl_checkpoint(ckpt_path, map_location, dtype=None, custom_vae_
             te1_sd[k.replace("conditioner.embedders.0.transformer.", "")] = state_dict.pop(k)
         elif k.startswith("conditioner.embedders.1.model."):
             te2_sd[k] = state_dict.pop(k)
-            
-    print("building/loading text encoders")
 
-    # TE1
-    if len(te1_sd) == 0:
-        print("[Custom Loader] TE1 missing in checkpoint. Downloading from Hugging Face...")
-        text_model1 = CLIPTextModel.from_pretrained(
-            "stabilityai/stable-diffusion-xl-base-1.0", 
-            subfolder="text_encoder",
-            torch_dtype=dtype if dtype is not None else torch.float32,
-        ).to(map_location)
-    else:
-        text_model1_cfg = CLIPTextConfig(
-            vocab_size=49408, hidden_size=768, intermediate_size=3072, num_hidden_layers=12, num_attention_heads=12,
-            max_position_embeddings=77, hidden_act="quick_gelu", layer_norm_eps=1e-05, dropout=0.0, attention_dropout=0.0,
-            initializer_range=0.02, initializer_factor=1.0, pad_token_id=1, bos_token_id=0, eos_token_id=2,
-            model_type="clip_text_model", projection_dim=768
-        )
-        with init_empty_weights():
-            text_model1 = CLIPTextModel._from_config(text_model1_cfg)
-            
-        if "text_model.embeddings.position_ids" in te1_sd:
-            te1_sd.pop("text_model.embeddings.position_ids")
-            
-        _load_state_dict_on_device(text_model1, te1_sd, device=map_location)
-        print("[Custom Loader] Loaded TE1 from checkpoint successfully.")
-    
-    # TE2
-    logit_scale = None
-    if len(te2_sd) == 0:
-        print("[Custom Loader] TE2 missing in checkpoint. Downloading from Hugging Face...")
-        text_model2 = CLIPTextModelWithProjection.from_pretrained(
-            "stabilityai/stable-diffusion-xl-base-1.0", 
-            subfolder="text_encoder_2",
-            torch_dtype=dtype if dtype is not None else torch.float32,
-        ).to(map_location)
+    if "text_model.embeddings.position_ids" in te1_sd:
+        te1_sd.pop("text_model.embeddings.position_ids")
 
-        # bypassing sd-scripts conversion,  must set standard logit_scale manually
-        logit_scale = torch.tensor(4.6055).to(map_location)
-    else:
-        text_model2_cfg = CLIPTextConfig(
-            vocab_size=49408, hidden_size=1280, intermediate_size=5120, num_hidden_layers=32, num_attention_heads=20,
-            max_position_embeddings=77, hidden_act="gelu", layer_norm_eps=1e-05, dropout=0.0, attention_dropout=0.0,
-            initializer_range=0.02, initializer_factor=1.0, pad_token_id=1, bos_token_id=0, eos_token_id=2,
-            model_type="clip_text_model", projection_dim=1280
-        )
-        with init_empty_weights():
-            text_model2 = CLIPTextModelWithProjection(text_model2_cfg)
-
-        converted_sd, logit_scale = convert_sdxl_text_encoder_2_checkpoint(te2_sd, max_length=77)
-        _load_state_dict_on_device(text_model2, converted_sd, device=map_location)
-        print("[Custom Loader] Loaded TE2 from checkpoint successfully.")
-
+    _load_state_dict_on_device(text_model1, te1_sd, device=map_location)
+    converted_sd, logit_scale = convert_sdxl_text_encoder_2_checkpoint(te2_sd, max_length=77)
+    _load_state_dict_on_device(text_model2, converted_sd, device=map_location)
 
     # 7. Load VAE
     # We load standard VAE from checkpoint first, then user can replace it later if args.vae_type is set
