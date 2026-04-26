@@ -1,14 +1,3 @@
-### Jina-clip-v2 + adapter support added for lora training with SDXL (sdxl_train_network.py)
-Arguments added:
-
-  --use_llm_as_text_encoder
-  
-  --adapter_jina
-  
-  --llm_model_path [Path to Jina-clip-v2] If its set to jinaai/jina-clip-v2 it downloads it from huggingface.
-  
-  --llm_adapter_path [Path to Jina-clip-v2 adapter]
-
 ### What for?
 
 SDXL-based models ([NoobAI-XL](https://civitai.com/models/833294?modelVersionId=1190596)) converted to Rectified flow / RF and more:
