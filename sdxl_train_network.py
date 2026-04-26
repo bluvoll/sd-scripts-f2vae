@@ -10,7 +10,6 @@ import train_network
 from library.utils import setup_logging
 setup_logging()
 import logging
-import gc
 logger = logging.getLogger(__name__)
 
 class SdxlNetworkTrainer(train_network.NetworkTrainer):
@@ -112,18 +111,7 @@ class SdxlNetworkTrainer(train_network.NetworkTrainer):
         self.load_stable_diffusion_format = os.path.isfile(args.pretrained_model_name_or_path) # approximate
         self.logit_scale = logit_scale
         self.ckpt_info = ckpt_info
-        if args.use_llm_as_text_encoder:
-            del text_encoder1
-            del text_encoder2
-            gc.collect()
-            text_encoder = None
-            if args.adapter_jina:
-                pass 
-            if text_encoder is None:
-                pass
-            text_encoders = [text_encoder] if text_encoder is not None else []
-            model_version = "custom_llm"
-            return sdxl_model_util.MODEL_VERSION_SDXL_BASE_V1_0, text_encoders, vae, unet
+
         return sdxl_model_util.MODEL_VERSION_SDXL_BASE_V1_0, [text_encoder1, text_encoder2], vae, unet
 
     def cache_latents(self, args, accelerator, vae, unet, train_dataset_group, vae_dtype):
@@ -261,16 +249,11 @@ class SdxlNetworkTrainer(train_network.NetworkTrainer):
         crop_size = batch["crop_top_lefts"]
         target_size = batch["target_sizes_hw"]
         embs = sdxl_train_util.get_size_embeddings(orig_size, crop_size, target_size, accelerator.device).to(weight_dtype)
-        if args.use_llm_as_text_encoder:
-            prompt_embeds = text_conds["prompt_embeds"]
-            pooled_prompt_embeds = text_conds["pooled_prompt_embeds"]
-            vector_embedding = torch.cat([pooled_prompt_embeds, embs], dim=1).to(weight_dtype)
-            text_embedding = prompt_embeds
-        else:
-            # concat embeddings
-            encoder_hidden_states1, encoder_hidden_states2, pool2 = text_conds
-            vector_embedding = torch.cat([pool2, embs], dim=1).to(weight_dtype)
-            text_embedding = torch.cat([encoder_hidden_states1, encoder_hidden_states2], dim=2).to(weight_dtype)
+
+        # concat embeddings
+        encoder_hidden_states1, encoder_hidden_states2, pool2 = text_conds
+        vector_embedding = torch.cat([pool2, embs], dim=1).to(weight_dtype)
+        text_embedding = torch.cat([encoder_hidden_states1, encoder_hidden_states2], dim=2).to(weight_dtype)
 
         noise_pred = unet(noisy_latents, timesteps, text_embedding, vector_embedding)
         return noise_pred
