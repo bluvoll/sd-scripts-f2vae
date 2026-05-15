@@ -152,7 +152,7 @@ class AdamW8bitKahan(bitsandbytes.optim.AdamW8bit):
             # shift -= lr * wd * p   (decoupled weight decay targeting true weight)
             # Computed in fp32 to avoid sub-ULP loss, then stochastically rounded
             # back to bf16 so the expected value is preserved across steps.
-            wd_update = p.data.float().mul_(lr * wd)
+            wd_update = p.data.float() * (lr * wd)
             shift_fp32 = shift.float().sub_(wd_update)
             if shift.dtype == torch.bfloat16:
                 _stochastic_round_bf16(shift_fp32, shift)
